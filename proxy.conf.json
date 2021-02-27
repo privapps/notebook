@@ -1,0 +1,15 @@
+{
+  "/index.php": {
+    "target": "http://127.0.0.1:9080",
+    "secure": false
+  },"/back.php": {
+    "target": "http://127.0.0.1:8080",
+    "secure": false
+  },"/data": {
+    "target": "http://127.0.0.1:8080",
+    "secure": false
+  },"/relay.php": {
+    "target": "http://127.0.0.1:8080",
+    "secure": false
+  }
+}

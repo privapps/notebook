@@ -1,0 +1,18 @@
+.nav-pills .nav-link.active{
+    background-color: #7b7bff;
+}
+.nav-pills a{
+    border: 1px solid #cfcfcf;
+    /*padding:-2px; */
+    /* background-color: ; */
+}
+.nav-pills a:hover{
+    background-color: #cfcfff;
+}
+p.smalltext{
+    font-size: 70%;
+    color: gray;
+}
+.form-control{
+    background-color: #ffffcf;
+}

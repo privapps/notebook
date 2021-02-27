@@ -1,0 +1,12 @@
+<ul ngbNav #topMenu="ngbNav" class="nav-tabs nav-pills" style="float: left;">
+    <li routerLinkActive="active" [ngbNavItem]='1'>
+      <a ngbNavLink [routerLink]="['/settings']">Settings</a>
+    </li>
+    <li routerLinkActive="active" [ngbNavItem]='0'>
+	<a ngbNavLink [routerLink]="['/notes']" (click)="go_to_notes()" >Notebook</a>
+    </li>
+  </ul>
+
+<div class="row w-100">
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,13 @@
+<div class="container">
+    <span *ngFor="let data of notes; let i = index">
+	    <div class="card" style="width: 100%">
+		<div class="card-body">
+		    <h2 class="card-title">{{data.name}}</h2>
+		    <p class="card-subtitle date">{{data?.date | date:'short' }}</p>
+		    <p class="card-text">
+			<ngx-md [data]="data.content"></ngx-md>
+		    </p>
+		</div>
+	    </div>
+    </span>
+</div>

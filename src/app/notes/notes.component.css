@@ -1,0 +1,48 @@
+.list-menu .nav-pills .nav-link.active {
+    color: #fff;
+    background-color: #7b7bff;
+}
+.list-menu .nav-pills .nav-link {
+    margin-bottom: 5px;
+    border-style: dotted;
+    border-color: #7b7bff;
+    border-width: 1px;
+}
+/*
+.list-menu .nav-pills .nav-link:hover{
+    background-color: #efefef;
+} */
+div.list-menu{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+div.content-space{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+div.thread-control{
+    float: right
+}
+div.thread-control > button{
+    margin-left: 2px
+}
+p.card-subtitle.date{
+    font-size: 70%;
+}
+div.card-body.live-preview{
+    background-color:#e6ffe6;
+}
+p.smalltext{
+    font-size: 70%;
+    color: gray;
+}
+.form-control{
+    background-color: #ffffcf;
+}
+span input{
+    margin-bottom: 40px;
+}
+.big {
+    height: 50px;
+    width: 50px;
+}

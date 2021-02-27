@@ -1,0 +1,88 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="h2 text-center" *ngIf="!is_writing">{{metadata.name}}</div>
+      <div *ngIf="is_writing">
+	  <input name="title" type="text" class="form-control text-center form-control-lg" [(ngModel)]="metadata.name" placeholder="Title"/>
+      </div>
+      <div *ngIf="!is_writing && metadata.description" class="text-center font-weight-light col-sm-12">{{metadata.description}}</div>
+      <div *ngIf="is_writing">
+	  <input name="desc" type="text" class="form-control form-control-sm text-center" [(ngModel)]="metadata.description" placeholder="Description"/>
+      </div>
+    </div>
+    <div class="col-sm-2 list-menu">
+	<div class="col-sm-12" *ngIf="notes.length>1">
+	    <button class="btn btn-secondary btn-sm col-sm-12" (click)="open(allNotes)">View All</button>
+	    <br /> <br />
+	</div>
+
+	<div class="d-flex">
+	  <ul ngbNav #navMenu="ngbNav" [(activeId)]="selected_id" class="nav-pills" orientation="vertical" style="width: 100%">
+	    <span *ngFor="let data of notes; let i = index">
+	      <li [ngbNavItem]='i'>
+		<a ngbNavLink [routerLink]="['/notes',i,url_extra]" (click)="get_current_note()" class="btn btn-light">{{data.name}}</a>
+		<ng-template ngbNavContent></ng-template>
+	      </li>
+	    </span>
+	  </ul>
+	</div>
+	<div [ngbNavOutlet]="navMenu" class="mt-1"></div>
+   </div>
+
+    <div class="col-sm-10 content-space"> <!-- main working area-->
+      <ngb-alert #shortAlert *ngIf="alert_message" type="warning" (closed)="alert_message = ''"><i-bs name="exclamation-circle-fill" class="fa-2x"></i-bs> {{ alert_message }}
+	</ngb-alert>
+      <div>
+	  <div class="col-sm-12">
+	    <div class="col-sm-7 form-check-inline">
+		<input class="form-check-input" type="checkbox" [(ngModel)]="is_writing" (click)="update_writing()" id="flexSwitchCheckDefault">
+		<label class="form-check-label" for="flexSwitchCheckDefault"><i-bs name="pencil-fill" width="1.3rem" height="1.3rem"></i-bs></label>
+
+	    </div>
+	    <div class="btn-group thread-control col-sm-4" role="group" *ngIf="is_writing">
+		<button title="Delete" type="button" class="btn btn-danger" (click)="delete_note()" [routerLink]="['/notes', selected_id-1 > 0 ? selected_id-1 : 0]" [disabled]="notes.length<=1"><i-bs name="trash-fill"></i-bs></button>
+		<button title="Move up" type="button" class="btn btn-secondary" (click)="move_note(true)" [disabled]="selected_id == 0"  [routerLink]="['/notes',selected_id-1]"><i-bs name="caret-up-fill"></i-bs></button>
+		<button title="Move down" type="button" class="btn btn-secondary" (click)="move_note(false)" [disabled]="selected_id == notes.length -1" [routerLink]="['/notes',selected_id+1]"><i-bs name="caret-down-fill"></i-bs></button>
+		<button title="Create" type="button" class="btn btn-primary" (click)="add_note()"><i-bs name="file-earmark-plus-fill"></i-bs></button>
+	      </div>
+	    </div>
+	  </div>
+
+	 <div class="card col-sm-12" *ngIf="is_writing">
+	  <form class="card-body">
+	      <div class="form-group">
+		  <input name="title" class="form-control" size="85" [(ngModel)]="selected_note.name" placeholder="Name" />
+	      </div>
+	      <div class="form-group">
+		  <textarea name="content" rows="8" cols="80" class="form-control" [(ngModel)]="selected_note.content"
+		  style="font-size: 80%" placeholder="Markdown supported!"></textarea>
+	      </div>
+	      <p class="card-text smalltext">More information about <a target="_blank" href="https://dimpu.github.io/ngx-md/">Markdown</a></p>
+	  </form>
+	</div>
+
+	<div class="card">
+	  <div class="card-body">
+	    <h3 class="card-title">{{selected_note?.name}}</h3>
+	    <p class="card-subtitle date">{{selected_note?.date | date:'short' }}</p>
+	    <p class="card-text">
+		<ngx-md [data]="selected_note.content"></ngx-md>
+	    </p>
+	  </div>
+	</div>
+    <div>
+      </div>
+    </div>
+  </div>
+
+<ng-template #allNotes let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">All Notes</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <app-fulllist></app-fulllist>
+  </div>
+</ng-template>
