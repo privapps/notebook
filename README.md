@@ -1,6 +1,6 @@
 # Privapp :: Notebook
 
-## A Simple End to End Encrypted Notebook
+## A Simple End to End Encrypted Notebook / Website & Builder
 Privacy is a right, an irrevocable entitlement held by all human beings from the moment of birth. However, the boundary has been crossed systematically over and over again, not to mention about a large population is still living under heavily monitoring and censorship.
 
 This application is an End to End encrypted notebook that can only be viewed, edit, or shared by the permitted user. Unless the `E2E key` or your device is compromised, no one can view the content.
@@ -13,6 +13,10 @@ This application is an End to End encrypted notebook that can only be viewed, ed
 
 ## App demo
 [![](https://privapps.github.io/notebook_m.jpg)](https://d.tube/#!/v/n0teb00k.privapps/QmXY3YD71CpFnQEMVa64aDeLUgGiEfKAqNMomyqahiEund)
+
+## Tip
+- There is a `View All` utton, which show all pages together. You can use browser's search there to find the information you need
+- If you want to make a link to another notebook, sometimes the browser won't refresh due to the routing did not change. You can add another ```/``` in front of ```/index.html``` to work around that.
 
 ## How it Work
 * You create or modify the notebook at your browser from the local computer. Then you can choose to save it as a file, or publish to the web.
@@ -40,26 +44,22 @@ You can read or write a notebook and then save or load from a local file
 ## Demo sites
 Here are a few notebook sites public avaliable. They are mainly for demo purpose.
 
-### No backend
-https://privapps.github.io/notebooks/
+#### No backend
+https://privapps.github.io/notebooks/  
 https://notebooks.us-south.cf.appdomain.cloud/
 
 The above two has no backend, which relays the notes to remote third party privatebin sites.
 
-### Privatebin in the same host
+#### Privatebin in the same host
 https://notebook-privapps.mybluemix.net
 
-This one is similar as you host privately as a docker, within kubernetes or in cloud foundry. Note, this site is for demostration purpose, if the node died or recycled, data would be wipe out.
+This one is similar as you host privately as a docker, within kubernetes or in cloud foundry. Note, this site is for demostration purpose, if the node died or recycled, data would be wiped out.
 
 ## Docker
 
 You can also find docker images at https://hub.docker.com/u/privapps
 
 See build details at https://github.com/privapps/notebook-docker-nginx-fpm-alpine-privatebin
-
-## Tip
-- There is a `View All` Button, which show all pages together. You can use browsers search there to find the information you need
-- If you want make a link to another notebook, sometimes the browser won't refresh due to the routing did not change. You can add another ```/``` in front of ```/index.html``` to work around that.
 
 ## Feedbacks and suggestions
 We would love to hear your opinions. Please let us know from [Feedback From](https://public.biaomail.us.to/stdv.php?id=MTQ=)
@@ -79,6 +79,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ```
 4. start developing the app as a regular angular one
 ``` ng s --proxy-config proxy.conf.json ```
+
+### Note
+To accomplish copy the URL and share to other people, some charecter are replaced in the address bar after ```#```:
+- ```/``` is replaced by ```___```
+- ```=``` is replaced by ```,```
 
 ## Wish list
 - [ ] Multi-languages menu and help doc
