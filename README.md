@@ -46,12 +46,11 @@ Here are a few notebook sites public avaliable. They are mainly for demo purpose
 
 #### No backend
 https://privapps.github.io/notebooks/  
-https://notebooks.us-south.cf.appdomain.cloud/
 
-The above two has no backend, which relays the notes to remote third party privatebin sites.
+The above one has no backend, which relays the notes to remote third party privatebin sites.
 
 #### Privatebin in the same host
-https://notebook-privapps.mybluemix.net
+https://notebooks-privapps.mybluemix.net/
 
 This one is similar as you host privately as a docker, within kubernetes or in cloud foundry. Note, this site is for demostration purpose, if the node died or recycled, data would be wiped out.
 
