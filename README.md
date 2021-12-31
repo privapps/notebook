@@ -68,7 +68,7 @@ We would love to hear your opinions. Please let us know from [Feedback From](htt
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.7.
 
 1. in the root folder, do
-```npm -i```
+```npm i```
 2. launch the privatebin docker, note here is using the port 9080
 ``` docker run -d --restart="always" --read-only -p 9080:8080 -v c:/temp/php:/app privatebin/nginx-fpm-alpine ```
 3. check the following two files, one is for angular proxy and the other one is the configuration of the apps
@@ -83,6 +83,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 To accomplish copy the URL and share to other people, some charecter are replaced in the address bar after ```#```:
 - ```/``` is replaced by ```___```
 - ```=``` is replaced by ```,```
+- ```?``` is replaced by ```---```
 
 ## Wish list
 - [ ] Multi-languages menu and help doc
