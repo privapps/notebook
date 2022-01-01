@@ -1,8 +1,8 @@
-name: Node.js Build
+name: Node.js Build 
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -16,7 +16,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: dev
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
@@ -26,9 +25,9 @@ jobs:
     - run: ng build --aot --build-optimizer --configuration production --base-href=/notebook/index.html
     - uses: actions/checkout@v2
       with:
-        ref: test
+        ref: doc
         path: doc
-    - name: update repo
+    - name: update repo for github pages
       shell: bash
       run: |
         find .
@@ -43,4 +42,4 @@ jobs:
         git config --local user.email "bot@users.noreply.github.com"
         git config --local user.name "bot"
         git commit -m "sync with code $(date +'%F')"
-        git push "https://${GITHUB_ACTOR}:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:test
+        git push "https://${GITHUB_ACTOR}:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:doc
