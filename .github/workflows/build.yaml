@@ -1,0 +1,44 @@
+name: Node.js Build 
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install -g @angular/cli@13.1.1 && npm ci
+    - run: ng build --aot --build-optimizer --configuration production --base-href=/notebook/index.html
+    - uses: actions/checkout@v2
+      with:
+        ref: doc
+        path: doc
+    - name: update repo for github pages
+      shell: bash
+      run: |
+        find .
+        cd doc/docs
+        mv assets/config.json /tmp/$$
+        mv data /tmp/
+        rm -fr *
+        cp -R ../../dist/notebook-privapps/* .
+        mv /tmp/$$ assets/config.json
+        mv /tmp/data .
+        git add -A .
+        git config --local user.email "bot@users.noreply.github.com"
+        git config --local user.name "bot"
+        git commit -m "sync with code $(date +'%F')"
+        git push "https://${GITHUB_ACTOR}:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:doc
