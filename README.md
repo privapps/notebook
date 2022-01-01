@@ -22,7 +22,7 @@ This application is an End to End encrypted notebook that can only be viewed, ed
 * You create or modify the notebook at your browser from the local computer. Then you can choose to save it as a file, or publish to the web.
 * If you save to a file, you can choose as plain text or enrypted. If you choose to publish to the web, 
 * `E2E key` is used for end-to-end encrypting or decrypting the content. If you don't set that, it would be used as a regular notebook. Note, even if there is no `E2E key`, from the server-side, the system administrator, network monitor are still not able to decrypt the content, because the encryption and decryption is happening at your **browser**. And we strongly suggest to set password for better protection.
-* This notebook is fully integrated with [privatebin](https://privatebin.info/). You can save the data at privatebin, then decrypt and view it from this app.
+* This notebook is fully integrated / compatible with [privatebin](https://privatebin.info/). You can save the data at privatebin, then decrypt and view it from this app.
 
 #### Use file as storage
 You can read or write a notebook and then save or load from a local file
@@ -37,15 +37,15 @@ You can read or write a notebook and then save or load from a local file
 
 ## Sample notes
 
-- Here is a [Peppa pigs' simple trivial questions](https://privapps.github.io/notebooks/index.html#/notes/0/type,remote&url,data___peppa&symmetric,Hj84nE4pQW4iBXhXhGf3wNeHqtYzGsupFFZHYgDDffjw) without a password. And you need the answers from the simple one to open [Peppa pig's Advanced trivial questions](https://privapps.github.io/notebooks/index.html#/notes/0/type,remote&url,data___peppa2&symmetric,7rrxctQBPgKwfUuU5XrQLteScRpZvPX2jQ6pbRcsASGt)
-- 中文问答 [00后不懂的事情](https://privapps.github.io/notebooks/index.html#/notes/0/type,remote&url,data___00&symmetric,5PQae51qE2E7e8KwqQERYkWYTcUntdWqH4Qn4LMKRj6d). 你必须答出来之前的题目才能够看 [巧问妙答和笑话](https://privapps.github.io/notebooks/index.html#/notes/0/type,remote&url,data___002&symmetric,253ZfcKR1KW3RZh35vYMybD1W4GoFHnh898L4ZbRUFDd)
-- Of course, you can always [create a brand new notebook](https://privapps.github.io/notebooks/index.html#/notes/0/&new)
+- Here is a [Peppa pigs' simple trivial questions](https://privapps.github.io/notebook/index.html#/notes/0/type,remote&url,data___peppa&symmetric,Hj84nE4pQW4iBXhXhGf3wNeHqtYzGsupFFZHYgDDffjw) without a password. And you need the answers from the simple one to open [Peppa pig's Advanced trivial questions](https://privapps.github.io/notebook/index.html#/notes/0/type,remote&url,data___peppa2&symmetric,7rrxctQBPgKwfUuU5XrQLteScRpZvPX2jQ6pbRcsASGt)
+- 中文问答 [00后不懂的事情](https://privapps.github.io/notebook/index.html#/notes/0/type,remote&url,data___00&symmetric,5PQae51qE2E7e8KwqQERYkWYTcUntdWqH4Qn4LMKRj6d). 你必须答出来之前的题目才能够看 [巧问妙答和笑话](https://privapps.github.io/notebook/index.html#/notes/0/type,remote&url,data___002&symmetric,253ZfcKR1KW3RZh35vYMybD1W4GoFHnh898L4ZbRUFDd)
+- Of course, you can always [create a brand new notebook](https://privapps.github.io/notebook/index.html#/notes/0/&new)
 
 ## Demo sites
 Here are a few notebook sites public avaliable. They are mainly for demo purpose.
 
 #### No backend
-https://privapps.github.io/notebooks/  
+https://privapps.github.io/notebook/  
 
 The above one has no backend, which relays the notes to remote third party privatebin sites.
 
@@ -65,10 +65,10 @@ We would love to hear your opinions. Please let us know from [Feedback From](htt
 
 ## Developer guide
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.7.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.1.
 
 1. in the root folder, do
-```npm i```
+```npm ci```
 2. launch the privatebin docker, note here is using the port 9080
 ``` docker run -d --restart="always" --read-only -p 9080:8080 -v c:/temp/php:/app privatebin/nginx-fpm-alpine ```
 3. check the following two files, one is for angular proxy and the other one is the configuration of the apps
@@ -78,6 +78,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ```
 4. start developing the app as a regular angular one
 ``` ng s --proxy-config proxy.conf.json ```
+5. release
+```ng build --aot --configuration production ```
 
 ### Note
 To accomplish copy the URL and share to other people, some charecter are replaced in the address bar after ```#```:
