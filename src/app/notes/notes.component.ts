@@ -170,7 +170,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
       this.service.reset_parameters()
       this.get_current_note()
     }
-    if (!editing) {
+    if (!editing && this.service.is_content_changed()) {
       alert('Make sure to save the changes if you made modification.')
     }
     this.service.is_editing = editing

@@ -2,47 +2,73 @@
     color: #fff;
     background-color: #7b7bff;
 }
+
 .list-menu .nav-pills .nav-link {
     margin-bottom: 5px;
     border-style: dotted;
     border-color: #7b7bff;
     border-width: 1px;
 }
+
+
 /*
 .list-menu .nav-pills .nav-link:hover{
     background-color: #efefef;
 } */
-div.list-menu{
+
+div.list-menu {
     padding-left: 5px;
     padding-right: 5px;
 }
-div.content-space{
+
+div.content-space {
     padding-left: 5px;
     padding-right: 5px;
 }
-div.thread-control{
+
+div.thread-control {
     float: right
 }
-div.thread-control > button{
+
+div.thread-control>button {
     margin-left: 2px
 }
-p.card-subtitle.date{
+
+p.card-subtitle.date {
     font-size: 70%;
 }
-div.card-body.live-preview{
-    background-color:#e6ffe6;
+
+div.card-body.live-preview {
+    background-color: #e6ffe6;
 }
-p.smalltext{
+
+p.smalltext {
     font-size: 70%;
     color: gray;
 }
-.form-control{
+
+.form-control {
     background-color: #ffffcf;
 }
-span input{
+
+span input {
     margin-bottom: 40px;
 }
+
 .big {
     height: 50px;
     width: 50px;
+}
+
+.nav-pills {
+    width: 100%;
+}
+
+.more-navs {
+    height: 450px;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-y: scroll;
+    border-style: groove;
+    padding: 2px;
 }

@@ -239,9 +239,14 @@ export class SettingsComponent implements OnInit {
         const self_url = this.service.get_self_url_prefix() + this.service.get_notes_url(this.note_page)
         this.editable_edit_url = self_url + "&server," + this.service.parameters.server
         this.editable_published = true
+        this.service.init_content_md5()
       }, error => {
         params.symmetric = old_symmetric_key
         this.handle_fail_fetch(error)
+        if(error.status == 409){
+          alert('Conflicts! There is a newer version at server')
+        }
+        console.log(error)
       }, true, 'never');
   }
 
