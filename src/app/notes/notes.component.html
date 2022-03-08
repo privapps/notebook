@@ -18,14 +18,14 @@
             </div>
 
             <div class="d-flex">
-                <ul ngbNav #navMenu="ngbNav" [(activeId)]="selected_id" class="nav-pills" orientation="vertical" [class.more-navs]="notes.length > 10">
+                <ul ngbNav #navMenu="ngbNav" [(activeId)]="selected_id" class="nav-pills" orientation="vertical" [class.more-navs]="notes.length > 12">
                     <span *ngFor="let data of notes; let i = index">
-						<li [ngbNavItem]='i'>
-							<a ngbNavLink [routerLink]="['/notes',i,url_extra]" (click)="get_current_note()"
-								class="btn btn-light">{{data.name}}</a>
-							<ng-template ngbNavContent></ng-template>
-						</li>
-					</span>
+                        <li [ngbNavItem]='i'>
+                            <a ngbNavLink [routerLink]="['/notes',i,url_extra]" (click)="get_current_note()"
+                                class="btn btn-light">{{data.name}}</a>
+                            <ng-template ngbNavContent></ng-template>
+                        </li>
+                    </span>
                 </ul>
             </div>
             <div [ngbNavOutlet]="navMenu" class="mt-1"></div>
@@ -41,23 +41,23 @@
                     <div class="col-sm-7 form-check-inline">
                         <input class="form-check-input" type="checkbox" [(ngModel)]="is_writing" (click)="update_writing()" id="flexSwitchCheckDefault">
                         <label class="form-check-label" for="flexSwitchCheckDefault">
-							<i-bs name="pencil-fill" width="1.3rem" height="1.3rem"></i-bs>
-						</label>
+                            <i-bs name="pencil-fill" width="1.3rem" height="1.3rem"></i-bs>
+                        </label>
 
                     </div>
                     <div class="btn-group thread-control col-sm-4" role="group" *ngIf="is_writing">
                         <button title="Delete" type="button" class="btn btn-danger" (click)="delete_note()" [routerLink]="['/notes', selected_id-1 > 0 ? selected_id-1 : 0]" [disabled]="notes.length<=1">
-							<i-bs name="trash-fill"></i-bs>
-						</button>
+                            <i-bs name="trash-fill"></i-bs>
+                        </button>
                         <button title="Move up" type="button" class="btn btn-secondary" (click)="move_note(true)" [disabled]="selected_id == 0" [routerLink]="['/notes',selected_id-1]">
-							<i-bs name="caret-up-fill"></i-bs>
-						</button>
+                            <i-bs name="caret-up-fill"></i-bs>
+                        </button>
                         <button title="Move down" type="button" class="btn btn-secondary" (click)="move_note(false)" [disabled]="selected_id == notes.length -1" [routerLink]="['/notes',selected_id+1]">
-							<i-bs name="caret-down-fill"></i-bs>
-						</button>
+                            <i-bs name="caret-down-fill"></i-bs>
+                        </button>
                         <button title="Create" type="button" class="btn btn-primary" (click)="add_note()">
-							<i-bs name="file-earmark-plus-fill"></i-bs>
-						</button>
+                            <i-bs name="file-earmark-plus-fill"></i-bs>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -92,8 +92,8 @@
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">All Notes</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-				<span aria-hidden="true">&times;</span>
-			</button>
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
         <div class="modal-body">
             <app-fulllist></app-fulllist>

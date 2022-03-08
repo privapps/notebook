@@ -161,13 +161,12 @@ export class BackboneService {
     const call_back = (x: any) => {
       this.is_editing = false
       const timestamp = x.headers.get('X-Timestamp')
-      console.log(x, x.headers)
       this.ed_server_ts = timestamp == null ? '0' : timestamp
       success(x.body)
     }
     this.privatebinService.cipher_privatebin_data(data, bin_symmetricKey, e2e_key, ttl).then(arr => {
       if (!editiable) {
-        this.http.post(url, arr).subscribe(call_back)
+        this.http.post(url, arr, {observe: 'response'}).subscribe(call_back)
       } else {
         let post_data = JSON.stringify(arr)
         const hash = CryptoES.SHA256(post_data + this.parameters.server).toString()

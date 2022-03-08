@@ -3,3 +3,7 @@
 ngx-md table {
     width: 100%;
 }
+
+ngx-md table tr:nth-child(even) {
+    background: #efefef;
+}

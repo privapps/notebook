@@ -246,7 +246,6 @@ export class SettingsComponent implements OnInit {
         if(error.status == 409){
           alert('Conflicts! There is a newer version at server')
         }
-        console.log(error)
       }, true, 'never');
   }
 

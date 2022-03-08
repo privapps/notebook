@@ -8,9 +8,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { NotesComponent } from './notes/notes.component';
 import { FormsModule } from '@angular/forms';
 import { SettingsComponent } from './settings/settings.component';
-import { NgbModule,NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
+import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
+import {
+  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill,
+  cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill
+} from 'ngx-bootstrap-icons';
 import { FulllistComponent } from './fulllist/fulllist.component';
+
+const icons = {
+  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill,
+  cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill
+};
 
 @NgModule({
   declarations: [
@@ -28,7 +37,7 @@ import { FulllistComponent } from './fulllist/fulllist.component';
     NgbModule,
     NgbNavModule,
     ReactiveFormsModule,
-    NgxBootstrapIconsModule.forRoot(allIcons)
+    NgxBootstrapIconsModule.pick(icons)
   ],
   providers: [],
   bootstrap: [AppComponent]

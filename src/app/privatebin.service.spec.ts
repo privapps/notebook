@@ -18,14 +18,12 @@ describe('PrivatebinService', () => {
     const symmetricKey = service.getSymmetricKey()
     const p = service.cipher(msg, symmetricKey,pwd)
     let cipher_data = await p;
-    console.log(cipher_data)
     let text = await service.decipher(cipher_data,symmetricKey, pwd, () => Promise.resolve(''), 1)
       expect(text).toEqual(msg)
   })
   it('should be en/de coded', async () => {
     const symmetricKey = service.getSymmetricKey()
     const data = JSON.stringify([service.key_to_base58(symmetricKey)])
-    console.log(data)
     // decode
     const de_data = JSON.parse(data)
     const out_key = service.key_from_base58(de_data[0])
