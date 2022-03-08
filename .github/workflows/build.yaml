@@ -15,7 +15,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
@@ -30,7 +29,6 @@ jobs:
     - name: update repo for github pages
       shell: bash
       run: |
-        find .
         cd doc/docs
         mv assets/config.json /tmp/$$
         mv data /tmp/
@@ -41,5 +39,5 @@ jobs:
         git add -A .
         git config --local user.email "bot@users.noreply.github.com"
         git config --local user.name "bot"
-        git commit -m "sync with code $(date +'%F')"
-        git push "https://${GITHUB_ACTOR}:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:doc
+        git commit -m "sync with code $(date +'%F')" && \
+        git push "https://${GITHUB_ACTOR}:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:doc || echo
