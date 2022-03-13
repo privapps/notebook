@@ -63,6 +63,9 @@ See build details at https://github.com/privapps/notebook-docker-nginx-fpm-alpin
 ## Feedbacks and suggestions
 We would love to hear your opinions. Please let us know from [Feedback From](https://public.biaomail.us.to/stdv.php?id=MTQ=)
 
+## Configuration
+The configuration is at  `assets/config.json`
+
 ## Developer guide
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.1.
@@ -96,5 +99,3 @@ To accomplish copy the URL and share to other people, some charecter are replace
 bitcoin:bc1qmyewq7mh03a3sd5zgvvg3y5sqgm5un3e7eayhq?time=1614371109
 ```
 Thanks for helping the maintainance and further development of the apps. Please stand up to protect privacy, promote the freedom of speach and fight against censorship. 
-
-
