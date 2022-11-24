@@ -186,13 +186,15 @@ export class SettingsComponent implements OnInit {
     this.is_loaded = true
   }
 
-  publish_privatebin_remotely() {
+  publish_privatebin_remotely(event : any) {
     if (this.config.privatebin == null) {
       throw new Error('Privatebin not configured')
     }
     let last_symmetric = this.service.parameters.symmetric
     this.service.parameters.symmetric = undefined // force a new key
+    event.target.disabled = true;
     this.service.publish_privatebin(this.config.privatebin.url, this.e2e_key, (resp) => {
+      event.target.disabled = false
       if (resp['status'] && resp['status'] == 1) {
         this.handle_fail_fetch(resp)
         return
@@ -212,6 +214,7 @@ export class SettingsComponent implements OnInit {
       }
       this.next()
     }, error => {
+      event.target.disabled = false
       this.service.parameters.symmetric = last_symmetric
       this.handle_fail_fetch(error)
     }, false, this.ttl);
