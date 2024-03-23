@@ -1,6 +1,6 @@
 {
     "privatebin":{
-        "url":"https://notebooks-relay.mybluemix.net/relay.php",
+        "url":"https://websitesgarage.altervista.org/relay.php",
         "ttl":[{"name":"1hour","value":"One Hour"},{"name":"1day","value":"One Day"},
             {"name":"1week","value":"One Week"},{"name":"1month","value":"One Month"}],
         "ttl_default":"1day"
