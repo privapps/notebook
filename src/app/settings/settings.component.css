@@ -1,18 +1,31 @@
-.nav-pills .nav-link.active{
+.nav-pills .nav-link.active {
     background-color: #7b7bff;
 }
-.nav-pills a{
+
+.nav-pills a {
     border: 1px solid #cfcfcf;
     /*padding:-2px; */
     /* background-color: ; */
 }
-.nav-pills a:hover{
+
+.nav-pills a:hover {
     background-color: #cfcfff;
 }
-p.smalltext{
+
+p.smalltext {
     font-size: 70%;
     color: gray;
 }
-.form-control{
+
+.form-control {
     background-color: #ffffcf;
+}
+
+button.btn.pl-0 {
+    text-align: left;
+    margin: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #f3f3f3;
+    text-decoration: none;
 }

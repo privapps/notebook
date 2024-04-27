@@ -84,7 +84,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         this.short_alert.close();
       }
     });
-    if (this.service.notes_ttl > 0) {
+    if (this.service.notes_ttl !== null && this.service.notes_ttl !== undefined && Number(this.service.notes_ttl) > 0) {
       const date = new Date()
       date.setSeconds(date.getSeconds() + this.service.notes_ttl.valueOf());
       this.alert_subj.next('This note would live till ' + new DatePipe('en-US').transform(date, 'short'))
