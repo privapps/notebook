@@ -63,11 +63,13 @@ See build details at https://github.com/privapps/notebook-docker-nginx-fpm-alpin
 ## Feedbacks and suggestions
 We would love to hear your opinions. Please let us know from [Feedback From](https://public.biaomail.us.to/stdv.php?id=MTQ=)
 
+## Configuration
+The configuration is at  `assets/config.json`
+
 ## Server side / Editable
 You can use privatebin as backend. In addition, there is a custom build backend, that you can edit existing notebook, which make it like a wiki / blog. See details at
 
 https://github.com/privapps/notebook-docker-nginx-fpm-alpine-privatebin/
-
 ## Developer guide
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.1.
@@ -94,7 +96,8 @@ To accomplish copy the URL and share to other people, some charecter are replace
 
 ## Wish list
 - [ ] Multi-languages menu and help doc
-- [ ] Implement editiable backend, so existing notebook can be modified
+- [x] Implement editiable backend, so existing notebook can be modified
+- [ ] Change ngx-md to ngx-markdown
 
 ## Please donate:
 ```

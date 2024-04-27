@@ -9,16 +9,16 @@ import { NotesComponent } from './notes/notes.component';
 import { FormsModule } from '@angular/forms';
 import { SettingsComponent } from './settings/settings.component';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgxBootstrapIconsModule, clockFill } from 'ngx-bootstrap-icons';
+import { NgxBootstrapIconsModule} from 'ngx-bootstrap-icons';
 import {
-  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill,
+  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill, clockFill,
   cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill
 } from 'ngx-bootstrap-icons';
 import { FulllistComponent } from './fulllist/fulllist.component';
 
 const icons = {
-  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill,
-  cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill, clockFill
+  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill, clockFill,
+  cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill
 };
 
 @NgModule({
