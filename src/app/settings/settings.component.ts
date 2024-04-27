@@ -6,7 +6,7 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LegacyService } from '../legacy.service'
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -35,8 +35,8 @@ export class SettingsComponent implements OnInit {
   alert_message = '';
   note_page: number = 0
 
-  userEmail = new FormGroup({
-    email: new FormControl('', [Validators.required,
+  userEmail = new UntypedFormGroup({
+    email: new UntypedFormControl('', [Validators.required,
     Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")])
   })
 
