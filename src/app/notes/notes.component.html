@@ -76,8 +76,8 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title">{{selected_note?.name}}</h3>
-                    <p class="card-subtitle date">{{selected_note?.date | date:'short' }}</p>
+                    <h3 class="card-title">{{selected_note.name}}</h3>
+                    <p class="card-subtitle date">{{selected_note.date | date:'short' }}</p>
                     <p class="card-text">
                         <ngx-md [data]="selected_note.content"></ngx-md>
                     </p>

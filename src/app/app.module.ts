@@ -9,7 +9,7 @@ import { NotesComponent } from './notes/notes.component';
 import { FormsModule } from '@angular/forms';
 import { SettingsComponent } from './settings/settings.component';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
+import { NgxBootstrapIconsModule, clockFill } from 'ngx-bootstrap-icons';
 import {
   questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill,
   cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill
@@ -18,7 +18,7 @@ import { FulllistComponent } from './fulllist/fulllist.component';
 
 const icons = {
   questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill,
-  cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill
+  cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill, clockFill
 };
 
 @NgModule({
