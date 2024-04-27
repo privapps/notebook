@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [20.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -20,7 +20,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm install -g @angular/cli@13.1.1 && npm ci
+    - run: npm install -g @angular/cli@16.2.12 && npm ci --legacy-peer-deps
+
     - run: ng build --aot --build-optimizer --configuration production --base-href=/index.html
     - uses: actions/checkout@v2
       with:

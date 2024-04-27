@@ -29,3 +29,8 @@ button.btn.pl-0 {
     background-color: #f3f3f3;
     text-decoration: none;
 }
+
+input[readonly],
+textarea[readonly] {
+    background-color: #efe9e9 !important
+}

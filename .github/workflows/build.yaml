@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [20.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: |
-        npm install -g @angular/cli@13.1.1 && npm ci
+        npm install -g @angular/cli@16.2.12 && npm ci --legacy-peer-deps
         ng build --aot --build-optimizer --configuration production --base-href=/notebook/index.html
         cp -R dist/notebook-privapps notebook
         cd notebook && sed -i.bak "s|/notebook/index.html|/index.html|g" index.html && rm *.bak
