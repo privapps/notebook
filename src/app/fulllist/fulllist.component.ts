@@ -3,9 +3,10 @@ import {BackboneService} from '../backbone.service'
 import { Note} from '../data_inteface'
 
 @Component({
-  selector: 'app-fulllist',
-  templateUrl: './fulllist.component.html',
-  styleUrls: ['./fulllist.component.css']
+    selector: 'app-fulllist',
+    templateUrl: './fulllist.component.html',
+    styleUrls: ['./fulllist.component.css'],
+    standalone: false
 })
 export class FulllistComponent implements OnInit {
   notes : Note[] = []

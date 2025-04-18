@@ -1,4 +1,4 @@
-name: Node.js Tags 
+name: Node.js Tags
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [22.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -21,11 +21,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: |
-        npm install -g @angular/cli@16.2.12 && npm ci --legacy-peer-deps
-        ng build --aot --build-optimizer --configuration production --base-href=/notebook/index.html
-        cp -R dist/notebook-privapps notebook
-        cd notebook && sed -i.bak "s|/notebook/index.html|/index.html|g" index.html && rm *.bak
-        cd ..
+        npm install -g @angular/cli@19.2.8 && npm ci
+        ng build --aot --build-optimizer --configuration production --base-href=/index.html
+        cp -R dist/notebook-privapps/browser notebook
         tar cjf notebook.tar.gz notebook
     - name: Release
       uses: softprops/action-gh-release@v1

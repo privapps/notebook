@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NotesComponent } from './notes/notes.component';
 import { FormsModule } from '@angular/forms';
 import { SettingsComponent } from './settings/settings.component';
-import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbNavModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxBootstrapIconsModule} from 'ngx-bootstrap-icons';
 import {
   questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill, clockFill,
@@ -25,7 +25,6 @@ const icons = {
   declarations: [
     AppComponent,
     NotesComponent,
-    SettingsComponent,
     FulllistComponent,
   ],
   imports: [
@@ -33,11 +32,13 @@ const icons = {
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    NgxMdModule.forRoot(),
+    ReactiveFormsModule,
     NgbModule,
     NgbNavModule,
-    ReactiveFormsModule,
-    NgxBootstrapIconsModule.pick(icons)
+    NgbAccordionModule,
+    NgxBootstrapIconsModule.pick(icons),
+    NgxMdModule.forRoot(),
+    SettingsComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]

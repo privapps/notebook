@@ -15,12 +15,15 @@
             "prefix": "app",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/notebook-privapps",
+                        "outputPath": {
+                          "base": "dist/notebook-privapps"
+                        },
                         "index": "src/index.html",
-                        "main": "src/main.ts",
-                        "polyfills": "src/polyfills.ts",
+                        "polyfills": [
+                          "src/polyfills.ts"
+                        ],
                         "tsConfig": "tsconfig.app.json",
                         "assets": [
                             "src/favicon.ico",
@@ -36,12 +39,11 @@
                             "ext/base-x-3.0.7.js",
                             "ext/privatebin-1.3.4.js"
                         ],
-                        "vendorChunk": true,
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "src/main.ts"
                     },
                     "configurations": {
                         "production": {
@@ -54,8 +56,6 @@
                             "sourceMap": false,
                             "namedChunks": false,
                             "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true,
                             "budgets": [{
                                     "type": "initial",
                                     "maximumWarning": "1mb",
@@ -74,18 +74,18 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "notebook-privapps:build"
+                      "buildTarget": "notebook-privapps:build"
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "notebook-privapps:build:production"
+                          "buildTarget": "notebook-privapps:build:production"
                         }
                     }
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "notebook-privapps:build"
+                      "buildTarget": "notebook-privapps:build"
                     }
                 },
                 "test": {
