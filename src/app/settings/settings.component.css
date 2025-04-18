@@ -1,11 +1,42 @@
+.custom-accordion {
+    width: 100%;
+    margin: 0 auto;
+}
+.custom-item {
+    border: 1px solid #ddd;
+}
+.custom-item:last-child {
+    border-bottom: none;
+}
+.custom-item input[type="checkbox"] {
+    display: none;
+}
+.custom-item > label {
+    display: block;
+    padding: 10px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    margin: 5px;
+    color: blue;
+    border-radius: 10px;
+}
+.custom-item .custom-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #fff;
+    padding: 0 15px;
+}
+.custom-item input[type="checkbox"]:checked ~ .custom-content {
+    max-height: none;
+    padding: 15px;
+}
 .nav-pills .nav-link.active {
     background-color: #7b7bff;
 }
 
 .nav-pills a {
     border: 1px solid #cfcfcf;
-    /*padding:-2px; */
-    /* background-color: ; */
 }
 
 .nav-pills a:hover {
@@ -32,5 +63,5 @@ button.btn.pl-0 {
 
 input[readonly],
 textarea[readonly] {
-    background-color: #efe9e9 !important
+    background-color: lightgray !important
 }

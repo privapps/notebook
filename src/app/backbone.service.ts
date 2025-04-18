@@ -13,6 +13,15 @@ import { AppComponent } from './app.component'
 export class BackboneService {
   metadata: Metadata = {} as Metadata
   notes: Note[] = []
+  setSelectedSettingIndex(index: number): void {
+    this.selectedSettingIndex = index;
+  }
+
+  getSelectedSettingIndex(): number {
+    return this.selectedSettingIndex;
+  }
+
+  selectedSettingIndex: number = 0;
 
   app: AppComponent = {} as AppComponent
 
@@ -109,7 +118,6 @@ export class BackboneService {
       const pair = e.split(',')
       map[pair[0]] = pair[1]
     })
-
     if (map.hasOwnProperty('new')) {
       this.initial_blank();
       this.new_initial = true
@@ -133,17 +141,21 @@ export class BackboneService {
       this.router.navigate(['notes', page, this.get_extra_url()]);
     }
   }
-  save_privatebin_file(e2e_key: string) {
+  save_privatebin_file(e2e_key: string, legacy: boolean = false) {
     const data = JSON.stringify([this.notes, this.metadata])
-    if (e2e_key.length > 0) {
-      const symmetricKey = this.privatebinService.getSymmetricKey()
-      const p = this.privatebinService.cipher(data, symmetricKey, e2e_key);
-      p.then(cipher => this.send_file(
-        JSON.stringify([cipher, this.privatebinService.key_to_base58(symmetricKey)]), true, 'notebook.bin'))
-    } else {
+    if (legacy && e2e_key.length <= 0) {
       this.send_file(data, false, 'notebook.json')
+      return
     }
+    const symmetricKey = this.privatebinService.getSymmetricKey()
+    const p = this.privatebinService.cipher(data, symmetricKey, e2e_key);
+    if (legacy) {
+      p.then(cipher => this.send_file(JSON.stringify([cipher, this.privatebinService.key_to_base58(symmetricKey)]), true, 'notebook.bin'))
+      return
+    }
+    p.then(cipher => this.send_file(JSON.stringify(cipher), true, `${this.privatebinService.key_to_base58(symmetricKey)}.json`))
   }
+
   decipher_privatebin_file(ciphertext: string, symmetricKey: string, password: string, handler: () => Promise<string>): Promise<string> {
     const bin_key = this.privatebinService.key_from_base58(symmetricKey)
     return this.privatebinService.decipher(ciphertext, bin_key, password, handler, 3)
@@ -166,7 +178,7 @@ export class BackboneService {
     }
     this.privatebinService.cipher_privatebin_data(data, bin_symmetricKey, e2e_key, ttl).then(arr => {
       if (!editiable) {
-        this.http.post(url, arr, {observe: 'response'}).subscribe(call_back)
+        this.http.post(url, arr, { observe: 'response' }).subscribe(call_back)
       } else {
         let post_data = JSON.stringify(arr)
         const hash = CryptoES.SHA256(post_data + this.parameters.server).toString()
@@ -186,19 +198,32 @@ export class BackboneService {
 
   load_privatebin_remotely(url: string, e_s_key: string, e2e_key: string, success: Function,
     decipher_error_handler: () => Promise<string>, error_fun: Function, fetch_error_handler: (e: any) => any): Subscription {
-    return this.http.get(url,{observe: 'response'})
-    .subscribe((resp: any) => {
-      const x = resp.body
-      const timestamp = resp.headers.get('X-Timestamp')
-      this.ed_server_ts = timestamp == null ? '0' : timestamp
-      if (x.status && x.status == 1) {
-        fetch_error_handler(x)
-        return Promise.resolve()
-      }
-      this.last_remote_data = x
-      this.notes_ttl = (x['meta'] != null && x['meta']['time_to_live'] != null) ? x['meta']['time_to_live'] : -1
-      return this.decipher_remote_data(e_s_key, e2e_key, success, decipher_error_handler, error_fun)
-    }, error => fetch_error_handler(error))
+    return this.http.get(url, { observe: 'response' })
+      .subscribe((resp: any) => {
+        const x = resp.body
+        const timestamp = resp.headers.get('X-Timestamp')
+        this.ed_server_ts = timestamp == null ? '0' : timestamp
+        if (x.status && x.status == 1) {
+          fetch_error_handler(x)
+          return Promise.resolve()
+        }
+        this.last_remote_data = x
+        this.notes_ttl = (x['meta'] != null && x['meta']['time_to_live'] != null) ? x['meta']['time_to_live'] : -1
+        return this.decipher_remote_data(e_s_key, e2e_key, success, decipher_error_handler, error_fun)
+      }, error => fetch_error_handler(error))
+  }
+
+  load_privatebin_inline(json: string, e_s_key: string, e2e_key: string, success: Function,
+    decipher_error_handler: () => Promise<string>, error_fun: Function, fetch_error_handler: (e: any) => any): void {
+    this.notes_ttl = -1
+    this.last_remote_data = JSON.parse(json)
+    this.decipher_remote_data(e_s_key, e2e_key, success, decipher_error_handler, error_fun)
+      .catch(error => fetch_error_handler(error))
+  }
+  get_encrypted_data(e2e_key: string, symmetric_key: string, ttl: string = "-1"): Promise<any> {
+    const bin_symmetricKey = this.privatebinService.key_from_base58(symmetric_key)
+    const data = JSON.stringify([this.notes, this.metadata])
+    return this.privatebinService.cipher_privatebin_data(data, bin_symmetricKey, e2e_key, ttl)
   }
 
   decipher_remote_data(e_s_key: string, e2e_key: string, success: Function,

@@ -6,15 +6,32 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LegacyService } from '../legacy.service'
-import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { UntypedFormGroup, UntypedFormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms'; // Added FormsModule
+import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { NgbModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap'; // Import main NgbModule and NgbAccordionModule
+import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons'; // Import NgxBootstrapIconsModule
+import { NgxMdModule } from 'ngx-md'; // Import NgxMdModule
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.css'],
+  standalone: true, // Make standalone
+  imports: [ // Add imports array
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule, // Keep FormsModule
+    NgbModule, // Use main NgbModule
+    NgbAccordionModule, // Import NgbAccordionModule
+    NgxBootstrapIconsModule, // Add NgxBootstrapIconsModule
+    NgxMdModule // Add NgxMdModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SettingsComponent implements OnInit {
+
   is_loaded = false
   e2e_key: string = ''
   editable_params: string | undefined = ''
@@ -35,6 +52,8 @@ export class SettingsComponent implements OnInit {
   alert_message = '';
   note_page: number = 0
 
+  inline_url: string = ''
+
   userEmail = new UntypedFormGroup({
     email: new UntypedFormControl('', [Validators.required,
     Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")])
@@ -42,7 +61,7 @@ export class SettingsComponent implements OnInit {
 
   @ViewChild("file_data", { static: false }) file_data: ElementRef = {} as ElementRef
   @ViewChild('shortAlert', { static: false }) short_alert: NgbAlert = {} as NgbAlert
-  @ViewChild('accordion', { static: false }) accordion: any = {}
+  // @ViewChild('accordion', { static: false }) accordion: any = {}
   @ViewChild('popE2EKey', { static: false }) pop_e2e_key: any = {}
   @ViewChild('popEmail', { static: false }) pop_email: any = {}
 
@@ -98,19 +117,11 @@ export class SettingsComponent implements OnInit {
     if (this.service.parameters.type == 'ed' && this.service.parameters.server && this.service.parameters.id) {
       this.editable_params = this.service.parameters.id + '#' + this.service.parameters.server
     }
-
     await new Promise(resolve => setTimeout(resolve, 10))
-    if (this.accordion) {
-      if (this.service.parameters.type) {
-        this.accordion.toggle(this.service.parameters.type)
-      } else if (this.config.default_setting_tab) {
-        this.accordion.toggle(this.config.default_setting_tab)
-      }
-    }
   }
 
-  save_data() {
-    this.service.save_privatebin_file(this.e2e_key);
+  save_privatebin_file(legacy:boolean) {
+    this.service.save_privatebin_file(this.e2e_key, legacy);
   }
 
   handleFileInput() {
@@ -140,6 +151,17 @@ export class SettingsComponent implements OnInit {
     const param = [this.service.get_parameter_remote_url(), this.service.parameters.symmetric]
     return this.load_privatebin('', param)
   }
+
+  load_inline_data() {
+    if (!this.service.parameters.base64 || !this.service.parameters.symmetric) {
+      throw new Error('Missing inline data')
+    }
+    const b64 = this.service.parameters.base64.replace('.', '/')
+    const jsond = atob(b64)
+    this.service.load_privatebin_inline(jsond, this.service.parameters.symmetric, this.e2e_key,
+      () => this.next(), () => this.request_new_password(),
+      () => this.handle_fail_decrypt(), (error: any) => this.handle_fail_fetch(error))
+  }
   load_editable_privatebin() {
     if (!this.service.parameters.id) {
       throw new Error('Missing required Info')
@@ -165,7 +187,7 @@ export class SettingsComponent implements OnInit {
     const param = [this.service.parameters.id, this.service.parameters.symmetric]
     return this.load_privatebin(this.config.privatebin.url + '?pasteid=', param)
   }
-  /** 
+  /**
    * param: string [id, symmetric_key]
    */
   private load_privatebin(url_prefix: string, param: string[]): Subscription {
@@ -186,7 +208,7 @@ export class SettingsComponent implements OnInit {
     this.is_loaded = true
   }
 
-  publish_privatebin_remotely(event : any) {
+  publish_privatebin_remotely(event: any) {
     if (this.config.privatebin == null) {
       throw new Error('Privatebin not configured')
     }
@@ -246,7 +268,7 @@ export class SettingsComponent implements OnInit {
       }, error => {
         params.symmetric = old_symmetric_key
         this.handle_fail_fetch(error)
-        if(error.status == 409){
+        if (error.status == 409) {
           alert('Conflicts! There is a newer version at server')
         }
       }, true, 'never');
@@ -254,6 +276,7 @@ export class SettingsComponent implements OnInit {
 
   load_from_file() {
     try {
+      const file_name: string = this.file_data.nativeElement.files[0].name
       let data, conf
       if (this.file_s.startsWith('[[{"name"')) { // plain
         [data, conf] = JSON.parse(this.file_s)
@@ -261,7 +284,7 @@ export class SettingsComponent implements OnInit {
         this.service.reset_parameters()
         this.service.is_editing = false
         this.next()
-      } else if (this.file_s.startsWith('[["')) { // encrypted 
+      } else if (this.file_s.startsWith('[["')) { // legacy encrypted
         if (this.e2e_key.length > 0) {
           let [cipher, skey] = JSON.parse(this.file_s)
           this.service.decipher_privatebin_file(cipher, skey, this.e2e_key, () => this.request_new_password())
@@ -278,6 +301,18 @@ export class SettingsComponent implements OnInit {
           this.alert_subj.next('File encrypted! Need a key')
           return
         }
+      } else if (this.file_s.startsWith('["') && file_name.endsWith('.json') && file_name.length > 40) {
+        const s_key = file_name.substring(0, file_name.length-5)
+        this.service.decipher_privatebin_file(JSON.parse(this.file_s), s_key, this.e2e_key, () => this.request_new_password())
+          .then(json => {
+            [data, conf] = JSON.parse(json)
+            this.service.initial(data, conf)
+            this.service.reset_parameters()
+            this.service.is_editing = false
+            this.next()
+          }).catch(e => {
+            this.alert_subj.next('Decrypt failed: ' + e)
+          })
       } else {
         this.alert_subj.next('File unknown.')
       }
@@ -315,6 +350,9 @@ export class SettingsComponent implements OnInit {
         return true
       } else if (param.type === 'remote') {
         this.load_other_host_privatebin()
+        return true
+      } else if (param.type === 'inline') {
+        this.load_inline_data()
         return true
       } else if (this.service.new_initial) {
         this.service.new_initial = false
@@ -388,4 +426,21 @@ export class SettingsComponent implements OnInit {
     return this.legacy.isSecureContext()
   }
 
+  toggleItem(index: number) {
+    this.service.setSelectedSettingIndex(index)
+  }
+
+  getSelected(): number {
+    return this.service.getSelectedSettingIndex()
+  }
+  new_inline_link() {
+    const s_key = this.service.new_symmetric_key()
+    const origin = window.location.origin;
+    const pathname = window.location.pathname;
+    const prefix = `${origin}${pathname}#/notes/0/type,inline&symmetric,${s_key}&base64`;
+    this.service.get_encrypted_data(this.e2e_key, s_key).then(json => {
+      const data = btoa(JSON.stringify(json)).replace('/', '.')
+      this.inline_url = `${prefix},${data}`
+    })
+  }
 }

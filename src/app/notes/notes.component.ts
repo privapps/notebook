@@ -8,11 +8,23 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { HashLocationStrategy, Location, LocationStrategy } from '@angular/common';
 
+import * as Prism from 'prismjs';
+
+
+import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-java';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-yaml';
+
 @Component({
-  selector: 'app-notes',
-  templateUrl: './notes.component.html',
-  providers: [Location, { provide: LocationStrategy, useClass: HashLocationStrategy }],
-  styleUrls: ['./notes.component.css']
+    selector: 'app-notes',
+    templateUrl: './notes.component.html',
+    providers: [Location, { provide: LocationStrategy, useClass: HashLocationStrategy }],
+    styleUrls: ['./notes.component.css'],
+    standalone: false
 })
 export class NotesComponent implements OnInit, AfterViewInit {
 
@@ -94,6 +106,9 @@ export class NotesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (typeof Prism === 'undefined') { // work around to load prism
+      console.error('Prism is undefined');
+    }
   }
 
   /** a workaround to reset markdown preview https://github.com/dimpu/ngx-md/issues/186 */

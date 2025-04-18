@@ -1,0 +1,109 @@
+Check the current version of Angular in your project:
+
+Open the package.json file and look for the @angular/core dependency. Note down the version number.
+Update the Angular CLI globally (if installed):
+
+
+ng update @angular/core @angular/cli
+If you encounter any peer dependency issues, resolve them by updating the required packages:
+
+ng update <package-name>
+Review the Angular Update Guide for any additional steps or breaking changes related to your specific version upgrade.
+
+mae sure application build fine 
+npm run build
+
+Test your application thoroughly after the upgrade to ensure everything works as expected.
+
+----
+
+after @ng-bootstrap/ng-bootstrap, there are break changes for ngb-accordion.
+
+currently all ngb-panel are shown. i want all of them collapse, and show by click.
+
+Please fix it.
+
+@/src/app/settings
+
+----
+@/src/app/settings
+following accordion should be collapse
+Web Host :: (Unmodifiable, Expirable) PrivateBin
+Local Storage :: File
+Create a new notebook
+and "About the App"
+should shown. after click other, e.g. "Create a new notebook", other should be collapse and the clicked on should shown
+---
+
+click other accordion item does not collapse rest of the items and show the clicked one.
+
+---
+@/src/app/settings
+
+the settings.component.html is plain bootstrap accordion but click does not work. e.g. not show other accordion item and collapse others.
+if you can direct fix it, it would be great. otherwise, maybe need to rewrite to use NgbAccordionModule ?
+----
+@/src/app/notes @/src/app/fullist
+
+currently app support markdown, can you add 
+1. hightligh for coding 
+2. mermaid UML
+
+Check the current version of Angular in your project:
+
+Open the package.json file and look for the @angular/core dependency. Note down the version number.
+Update the Angular CLI globally (if installed):
+
+
+ng update @angular/core @angular/cli
+If you encounter any peer dependency issues, resolve them by updating the required packages:
+
+ng update <package-name>
+Review the Angular Update Guide for any additional steps or breaking changes related to your specific version upgrade.
+
+mae sure application build fine 
+npm run build
+
+Test your application thoroughly after the upgrade to ensure everything works as expected.
+
+----
+
+after @ng-bootstrap/ng-bootstrap, there are break changes for ngb-accordion.
+
+currently all ngb-panel are shown. i want all of them collapse, and show by click.
+
+Please fix it.
+
+@/src/app/settings
+
+----
+@/src/app/settings
+following accordion should be collapse
+Web Host :: (Unmodifiable, Expirable) PrivateBin
+Local Storage :: File
+Create a new notebook
+and "About the App"
+should shown. after click other, e.g. "Create a new notebook", other should be collapse and the clicked on should shown
+---
+
+click other accordion item does not collapse rest of the items and show the clicked one.
+
+---
+@/src/app/settings
+
+the settings.component.html is plain bootstrap accordion but click does not work. e.g. not show other accordion item and collapse others.
+if you can direct fix it, it would be great. otherwise, maybe need to rewrite to use NgbAccordionModule ?
+----
+@/src/app/notes @/src/app/fullist
+
+currently app support markdown, can you add 
+1. hightligh for coding 
+2. mermaid UML
+-----
+
+@/src/assets/css/settings-help.md 
+and all html files in and in the subfolder of @/src/app 
+proofread them, make it easy to understand.
+Revise and enhance it to improve its clarity and detail in a kind and gentle tone.
+make sure do not change any functionality or code. 
+Do NOT add comments.

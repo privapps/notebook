@@ -33,4 +33,5 @@ export interface Parameters {
     symmetric?: string
     url?: string
     server?: string
+    base64?: string
 }

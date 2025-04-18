@@ -69,13 +69,13 @@ export class LegacyService {
 
     // async & ES6 support
     try {
-	eval('async () => {}');
+      new Function('async () => {}');
     } catch (e) {
-	if (e instanceof SyntaxError) {
-	    return true;
-	} else {
-	    throw e; // throws CSP error
-	}
+      if (e instanceof SyntaxError) {
+        return true;
+      } else {
+        throw e; // throws CSP error
+      }
     }
 
     return false;
