@@ -1,0 +1,39 @@
+name: Node.js dev
+
+on:
+  push:
+    branches: [ test ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - run: |
+        npm install -g @angular/cli@19.2.8 && npm ci
+        ng build --aot --build-optimizer --configuration production --base-href=/index.html
+        cp -R dist/notebook-privapps/browser notebook
+        tar cjf notebook.tar.gz notebook
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          notebook.tar.gz
+    - uses: actions/checkout@v2
+      with:
+        ref: doc
+        path: doc
+    - name: update repo for github pages
+      shell: bash
+      run: |
+        cd doc/docs
+        mv assets/config.json /tmp/$$
+        mv data /tmp/
+        rm -fr *
+        cp -R ../../dist/notebook-privapps/* .
+        mv /tmp/$$ assets/config.json
+        mv /tmp/data 
