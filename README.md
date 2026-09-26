@@ -4,7 +4,7 @@
 
 Privacy is a fundamental right, an irrevocable entitlement held by all human beings from the moment of birth. However, this boundary has been crossed systematically over and over again, and a large population still lives under heavy monitoring and censorship.
 
-This application is an end-to-end encrypted notebook that can only be viewed, edited, or shared by authorized users. Unless the `E2E key` or your device is compromised, no one can view the content.
+This application encrypts notebook content in your browser before storing or sharing it. Keep your device, `E2E key`, and notebook link secure to help protect your content.
 
 ## Use Cases
 * Use it as a personal private notebook. For example, for daily notes, family secrets, etc.
@@ -16,13 +16,15 @@ This application is an end-to-end encrypted notebook that can only be viewed, ed
 [![](https://privapps.github.io/notebook_m.jpg)](https://d.tube/#!/v/n0teb00k.privapps/QmXY3YD71CpFnQEMVa64aDeLUgGiEfKAqNMomyqahiEund)
 
 ## Tips
-- There is a `View All` button, which shows all pages together. You can use your browser's search feature there to find the information you need.
+- There is a `View All` button, which shows all pages together with the same card and Markdown styling as the reading view. You can use your browser's search feature there to find the information you need.
+- While editing a multi-note notebook, `Hide sidebar` / `Show sidebar` toggles the note list to give the editor and preview more room.
 - If you want to make a link to another notebook, sometimes the browser won't refresh due to routing issues. You can add another `/` in front of `/index.html` to work around that.
+- Markdown code fences display language labels and syntax highlighting for Python, Java, Bash, JavaScript, CSS, JSON, YAML, Rust, Go, C, and C++. Other fence types are shown as plain text, and diagrams are not rendered.
+- Indented Markdown code blocks are preserved in the note preview and View All, including notes that start with code.
 
 ## How It Works
 * You create or modify the notebook in your browser on your local computer. Then you can choose to save it as a file or publish it to the web.
-* If you save to a file, you can choose plain text or encrypted. If you choose to publish to the web:
-  * The `E2E key` is used for end-to-end encryption or decryption of the content. If you don't set that, it would function as a regular notebook. Note that even without an `E2E key`, the system administrator or network monitor cannot decrypt the content because encryption and decryption occur in your **browser**. We strongly recommend setting a password for better protection.
+* If you save to a file, you can choose plain text or encrypted. When you publish a notebook, encryption and decryption happen in your **browser**. An `E2E key` adds password-based protection; we recommend using one for sensitive content.
 * This notebook is fully integrated and compatible with [PrivateBin](https://privatebin.info/). You can save the data in PrivateBin and then decrypt and view it from this app.
 
 ### Using Files as Storage
@@ -67,10 +69,14 @@ You can use PrivateBin as a backend. Additionally, there is a custom-built backe
 https://github.com/privapps/notebook-docker-nginx-fpm-alpine-privatebin/
 
 ## Developer Guide
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.1.
+This project uses [Angular](https://angular.dev/) 21.2 and [Angular CLI](https://angular.dev/tools/cli) 21.2.
+
+Use Node.js 24 LTS and npm 10 or newer for development. The supported runtime range is recorded in `package.json`.
 
 1. In the root folder, do:
-   ```npm ci```
+   ```bash
+   npm ci
+   ```
 2. Launch the PrivateBin Docker container (note: using port 9080):
    ```docker run -d --restart="always" --read-only -p 9080:8080 -v c:/temp/php:/app privatebin/nginx-fpm-alpine```
 3. Check the following two files, one for Angular proxy and the other for the app configuration:
@@ -79,9 +85,20 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
    \src\assets\config.json
    ```
 4. Start developing the app as a regular Angular one:
-   ```ng s --proxy-config proxy.conf.json```
-5. Release:
-   ```ng build --aot --configuration production```
+   ```bash
+   npm start -- --proxy-config proxy.conf.json
+   ```
+5. Run the application checks:
+   ```bash
+   npm run build
+   npm run pbuild
+   npm test
+   npm run lint
+   ```
+6. Release:
+   ```bash
+   npm run pbuild
+   ```
 
 ### Note
 To accomplish copying the URL and sharing it with others, some characters are replaced in the address bar after `#`:
@@ -99,8 +116,6 @@ inlinedata=$(cat "<encrypted_file>" | base64 -i - | sed 's'/\//./g')
 ## Wish List
 - [x] Implement editable backend, so existing notebooks can be modified
 - [x] All your data in your URL
-- [x] Code highlight
-- [ ] Mermaid URL
 
 ## Please Donate:
 ```

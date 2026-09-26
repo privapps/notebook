@@ -1,68 +1,104 @@
-.list-menu .nav-pills .nav-link.active {
-    color: #fff;
-    background-color: #7b7bff;
+:host {
+  display: block;
+  min-height: calc(100vh - 62px);
+  background: #f7f8f6;
+  color: #26312d;
 }
 
-.list-menu .nav-pills .nav-link {
-    margin-bottom: 5px;
-    border-style: dotted;
-    border-color: #7b7bff;
-    border-width: 1px;
+.notebook-page {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 22px 0 70px;
 }
 
-div.list-menu {
-    padding-left: 5px;
-    padding-right: 5px;
+.notebook-layout {
+  display: grid;
+  grid-template-columns: 215px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
 }
 
-div.content-space {
-    padding-left: 5px;
-    padding-right: 5px;
+.notebook-layout.single-note { grid-template-columns: minmax(0, 1fr); }
+.notebook-layout > * { min-width: 0; }
+
+.view-all {
+  display: block;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #d5dfd7;
+  border-radius: 7px;
+  color: #345e4c;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
 }
 
-div.thread-control {
-    float: right
+.view-all:hover { background: #edf4ef; }
+
+.note-menu {
+  display: block;
+  max-height: min(55vh, 500px);
+  overflow-y: auto;
+  margin-top: 14px;
 }
 
-div.thread-control>button {
-    margin-left: 2px
+.note-menu .nav-link {
+  display: block;
+  margin: 3px 0;
+  padding: 10px 13px;
+  border-radius: 7px;
+  color: #56645b;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  text-align: left;
+  text-decoration: none;
 }
 
-p.card-subtitle.date {
-    font-size: 70%;
+.note-menu .nav-link:hover { color: #2f624b; background: #ebf0eb; }
+.note-menu .nav-link.active { color: #2f624b; background: #e8f1eb; font-weight: 650; }
+
+.edit-row {
+  display: flex;
+  min-height: 30px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-div.card-body.live-preview {
-    background-color: #e6ffe6;
+.edit-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 2px;
+  color: #5d6b62;
+  cursor: pointer;
 }
 
-p.smalltext {
-    font-size: 70%;
-    color: gray;
+.edit-mode .form-check-input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #4a7967;
 }
 
-.form-control {
-    background-color: #ffffcf;
-}
+.edit-mode i-bs { line-height: 1; }
 
-span input {
-    margin-bottom: 40px;
-}
+.form-control { border-color: #d5dfd7; background: #fff; color: #26312d; }
+.form-control:focus { border-color: #6b9a7e; box-shadow: 0 0 0 3px rgb(107 154 126 / 18%); }
+.notebook-title-input { margin-bottom: 6px; text-align: center; font-size: 26px; }
+.notebook-description-input { text-align: center; font-size: 13px; }
 
-.big {
-    height: 50px;
-    width: 50px;
-}
+.view-all:focus-visible,
+.note-menu .nav-link:focus-visible,
+.edit-mode:focus-within { outline: 3px solid #a5c7b6; outline-offset: 2px; }
 
-.nav-pills {
-    width: 100%;
-}
-
-.more-navs {
-    height: 450px;
-    width: 100%;
-    flex-wrap: nowrap;
-    overflow-y: scroll;
-    border-style: groove;
-    padding: 2px;
+@media (max-width: 680px) {
+  :host { min-height: calc(100vh - 55px); }
+  .notebook-page { width: min(100% - 32px, 560px); padding-top: 18px; }
+  .notebook-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .note-menu { max-height: 150px; margin-top: 8px; }
+  .note-menu .nav-link { padding: 8px 11px; }
 }

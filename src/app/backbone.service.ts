@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Metadata, Note, Config, Parameters } from './data_inteface'
-import CryptoES from 'crypto-es';
+import { MD5, SHA256 } from 'crypto-es';
 import { PrivatebinService } from './privatebin.service'
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
@@ -74,14 +74,14 @@ export class BackboneService {
     dlink.remove();
   }
   get_w_hash(msg: string, w_key: string): string {
-    return CryptoES.SHA256(msg + w_key).toString()
+    return SHA256(msg + w_key).toString()
   }
   init_content_md5() {
     this.last_content_hash = this.get_content_md5();
   }
   get_content_md5(): string {
     const data = JSON.stringify([this.notes, this.metadata])
-    return CryptoES.MD5(data).toString()
+    return MD5(data).toString()
   }
   initial(data: Note[], conf: Metadata) {
     this.notes = data
@@ -181,7 +181,7 @@ export class BackboneService {
         this.http.post(url, arr, { observe: 'response' }).subscribe(call_back)
       } else {
         let post_data = JSON.stringify(arr)
-        const hash = CryptoES.SHA256(post_data + this.parameters.server).toString()
+        const hash = SHA256(post_data + this.parameters.server).toString()
         if (this.config.editable == null) {
           throw new Error('Editiable backend is not configured');
         }

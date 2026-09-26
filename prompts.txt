@@ -46,8 +46,7 @@ if you can direct fix it, it would be great. otherwise, maybe need to rewrite to
 @/src/app/notes @/src/app/fullist
 
 currently app support markdown, can you add 
-1. hightligh for coding 
-2. mermaid UML
+1. syntax highlighting for code
 
 Check the current version of Angular in your project:
 
@@ -97,8 +96,7 @@ if you can direct fix it, it would be great. otherwise, maybe need to rewrite to
 @/src/app/notes @/src/app/fullist
 
 currently app support markdown, can you add 
-1. hightligh for coding 
-2. mermaid UML
+1. syntax highlighting for code
 -----
 
 @/src/assets/css/settings-help.md 

@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgxMdModule } from 'ngx-md';
-import { HttpClientModule } from '@angular/common/http';
+import { MarkdownModule } from 'ngx-markdown';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NotesComponent } from './notes/notes.component';
 import { FormsModule } from '@angular/forms';
 import { SettingsComponent } from './settings/settings.component';
@@ -15,6 +15,7 @@ import {
   cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill
 } from 'ngx-bootstrap-icons';
 import { FulllistComponent } from './fulllist/fulllist.component';
+import { NoteCardComponent } from './note-card/note-card.component';
 
 const icons = {
   questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill, clockFill,
@@ -37,8 +38,9 @@ const icons = {
     NgbNavModule,
     NgbAccordionModule,
     NgxBootstrapIconsModule.pick(icons),
-    NgxMdModule.forRoot(),
+    MarkdownModule.forRoot({ loader: HttpClient }),
     SettingsComponent,
+    NoteCardComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]

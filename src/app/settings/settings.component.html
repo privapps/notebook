@@ -1,43 +1,177 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-1">
-    </div>
-    <div class="col-sm-10">
-      <div class="alert alert-danger" role="alert" *ngIf="is_unsupported_browser()">
-        The browser you are using does not support encryption. Are you using https?
-      </div>
-      <div class="alert alert-danger" role="alert" *ngIf="!is_https()">
-        This app only supports https!
-      </div>
-      <ngb-alert #shortAlert *ngIf="alert_message" type="danger" (closed)="alert_message = ''">{{ alert_message }}
-      </ngb-alert>
-      <button type="button" class="btn btn-warning btn-info btn-block" *ngIf="can_retry" (click)="retry_password_with_last_remote_data()">
-        <i-bs name="arrow-repeat"></i-bs> Retry Password
-      </button>
+<main class="settings-page">
+      @if (is_unsupported_browser()) {
+        <div class="alert alert-danger" role="alert">
+          The browser you are using does not support encryption. Are you using https?
+        </div>
+      }
+      @if (!is_https()) {
+        <div class="alert alert-danger" role="alert">
+          This app only supports https!
+        </div>
+      }
+      @if (alert_message) {
+        <ngb-alert #shortAlert type="danger" (closed)="alert_message = ''">{{ alert_message }}
+        </ngb-alert>
+      }
+      @if (can_retry) {
+        <button type="button" class="btn btn-warning btn-info btn-block" (click)="retry_password_with_last_remote_data()">
+          <i-bs name="arrow-repeat"></i-bs> Retry Password
+        </button>
+      }
 
-      <div class="h2 text-center">Privapps Notebook</div>
+      <header class="notebook-heading">
+        <h1>Settings</h1>
+        <p>Privapps Notebook</p>
+      </header>
       <div class="custom-accordion">
-          <div class="custom-item">
-              <input type="checkbox" id="item1" name="item1" [checked]="getSelected() === 0" [value]="0" (change)="toggleItem(0)">
-              <label for="item1"><i-bs name="question-circle"></i-bs> About the App</label>
-              <div class="custom-content">
-                  <ngx-md ngPreserveWhitespaces [path]="'./assets/css/settings-help.md'"></ngx-md>
-              </div>
+        <div class="custom-item">
+          <input type="checkbox" id="item1" name="item1" [checked]="getSelected() === 0" [value]="0" (change)="toggleItem(0)">
+          <label for="item1">About the App</label>
+          <div class="custom-content">
+            <p class="section-description">Learn how the notebook works, how your content is protected, and how to save or share your notes.</p>
+            <div class="note-content settings-help">
+              <markdown ngPreserveWhitespaces [src]="'./assets/css/settings-help.md'"></markdown>
+            </div>
           </div>
-          <div class="custom-item" *ngIf="config.editable">
-              <input type="checkbox" id="item2" name="item2" [checked]="getSelected() === 1" [value]="1" (change)="toggleItem(1)">
-              <label for="item2"><i-bs name="tree"></i-bs> Hosted :: Editable</label>
-              <div class="custom-content">
-                  <ul ngbNav #ehost="ngbNav" class="nav-tabs nav-pills">
-                    <li ngbNavItem>
-                      <a ngbNavLink>Publish</a>
-                      <ng-template ngbNavContent>
-                        <div class="d-grid gap-2">
-                          <button (click)="publish_editable()" class="btn btn-primary" [disabled]="!can_editable_publish()">Create/Update</button>
-                        </div>
-                      </ng-template>
-                    </li>
-                  </ul>
+        </div>
+        @if (config.editable) {
+          <div class="custom-item">
+            <input type="checkbox" id="item2" name="item2" [checked]="getSelected() === 1" [value]="1" (change)="toggleItem(1)">
+            <label for="item2">Hosted: Editable notebook</label>
+            <div class="custom-content">
+              <p class="section-description">Keep a notebook on this site's editable server and update the hosted copy as your notes change. Register for server access or enter your existing ID and server key, and keep the editing URL private.</p>
+              <ul ngbNav #ehost="ngbNav" class="nav-tabs nav-pills">
+                <li ngbNavItem>
+                  <a ngbNavLink>Publish</a>
+                  <ng-template ngbNavContent>
+                    <div class="d-grid gap-2">
+                      <button (click)="publish_editable()" class="btn btn-primary" [disabled]="!can_editable_publish()">Create/Update</button>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+              <div class="form-group">
+                <div class="mb-3 row">
+                  <label for="e2ekey" class="form-label col-sm-3">
+                    <i-bs name="key-fill"></i-bs> E2E Key
+                  </label>
+                  <div class="col-sm-9">
+                    <input type="password" name="e2ekey" class="form-control" [(ngModel)]="e2e_key" />
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="e2ekey" class="form-label col-sm-3">Server information:<br />ID and server key</label>
+                  <div class="col-sm-7">
+                    <input type="text" name="writekey" class="form-control" [(ngModel)]="editable_params" />
+                  </div>
+                  <div class="col-sm-2">
+                    <button class="btn btn-info col-sm-12" (click)="popup_editable_register()" title="Register an account">Register</button>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="id" class="form-label col-sm-3">Symmetric Key</label>
+                  <div class="col-sm-7">
+                    <input type="text" name="writekey" class="form-control" readonly=true [(ngModel)]="editable_symmetric_key" />
+                  </div>
+                  <div class="col-sm-2">
+                    <button class="btn btn-success col-sm-12" (click)="new_symmetric_key()" title="Generate a new key">
+                      <i-bs name="arrow-clockwise"></i-bs>
+                    </button>
+                  </div>
+                  <p class="smalltext">An E2E key is recommended. Select the button to generate a new symmetric key.</p>
+                </div>
+                @if (editable_edit_url) {
+                  <div class="mb-3 row">
+                    @if (editable_published) {
+                      <div class="alert alert-success text-center">
+                        Keep a copy of this URL in a safe place so you can edit this notebook again. Treat it as private.
+                      </div>
+                    }
+                    <input type="text" class="form-control" readonly=true [(ngModel)]="editable_edit_url" onClick="this.select();" />
+                  </div>
+                }
+                <div [ngbNavOutlet]="ehost"></div>
+              </div>
+            </div>
+          </div>
+        }
+        <div class="custom-item">
+          <input type="checkbox" id="item3" name="item3" [checked]="getSelected() === 2" [value]="2" (change)="toggleItem(2)">
+          <label for="item3">Create a new notebook</label>
+          <div class="custom-content">
+            <p class="section-description">Start with a blank notebook and write your notes in the browser. Save or publish your current work first: starting over replaces the notes open in this tab. New notes are not saved automatically.</p>
+            <div class="form-group">
+              <div class="d-grid gap-2">
+                <button (click)="create_notebook()" class="btn btn-primary">New from scratch</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="custom-item">
+          <input type="checkbox" id="item4" name="item4" [checked]="getSelected() === 3" [value]="3" (change)="toggleItem(3)">
+          <label for="item4">Local storage: File</label>
+          <div class="custom-content">
+            <p class="section-description">Open a notebook file from your device, or download a copy of your current notebook for backup. Your notebook is not uploaded to a server. Save a new copy whenever you want to keep your latest changes.</p>
+            <ul ngbNav #file="ngbNav" class="nav-tabs nav-pills">
+              <li ngbNavItem>
+                <a ngbNavLink>Load</a>
+                <ng-template ngbNavContent>
+                  <p class="smalltext">Choose a notebook file saved by this app. If you saved it with an E2E key, enter the same key in the E2E Key field before loading it.</p>
+                  <div class="mb-3 row">
+                    <label for="file" class="form-label col-sm-2">
+                      <i-bs name="file-earmark"></i-bs> File
+                    </label>
+                    <div class="col-sm-10">
+                      <input type="file" #file_data (change)="handleFileInput()" class="form-control c-file col-sm-12" />
+                    </div>
+                  </div>
+                  <div class="d-grid gap-2">
+                    <button (click)="load_from_file()" class="btn btn-primary" [disabled]="!file_s">Load</button>
+                  </div>
+                </ng-template>
+              </li>
+              <li ngbNavItem> <a ngbNavLink>Legacy</a>
+              <ng-template ngbNavContent>
+                <div class="d-grid gap-2">
+                  <p class="smalltext">Use the older file format when needed. With an E2E key, the notebook is encrypted and its symmetric key is stored inside the file. Without an E2E key, this option saves plain text.</p>
+                  <button (click)="save_privatebin_file(true)" class="btn btn-primary">Save legacy file</button>
+                </div>
+              </ng-template>
+            </li>
+            <li ngbNavItem> <a ngbNavLink>Save</a>
+            <ng-template ngbNavContent>
+              <div class="d-grid gap-2">
+                <p class="smalltext">Download an encrypted notebook file. An E2E key adds password-based protection and is recommended for sensitive notes. Keep the file name unchanged: it contains the symmetric key needed to reopen the notebook.</p>
+                <button (click)="save_privatebin_file(false)" class="btn btn-primary">Save</button>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+        <div class="form-group">
+          <div class="mb-3 row">
+            <label for="e2ekey" class="form-label col-sm-2">
+              <i-bs name="key-fill"></i-bs> E2E Key
+            </label>
+            <div class="col-sm-10">
+              <input type="password" name="e2ekey" class="form-control" [(ngModel)]="e2e_key" />
+            </div>
+          </div>
+          <div [ngbNavOutlet]="file"></div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-item">
+      <input type="checkbox" id="item5" name="item5" [checked]="getSelected() === 4" [value]="4" (change)="toggleItem(4); get_plain_text()">
+      <label for="item5">Web host: PrivateBin (read-only, expiring)</label>
+      <div class="custom-content">
+        <p class="section-description">Share a snapshot of your notebook through PrivateBin. Publishing creates a new copy rather than updating an existing link. The host's expiration settings determine how long it remains available, so keep a file backup if you need it later.</p>
+        <ul ngbNav #privatebin="ngbNav" class="nav-tabs nav-pills">
+          @if (config.privatebin) {
+            <li ngbNavItem>
+              <a ngbNavLink>Publish</a>
+              <ng-template ngbNavContent>
+                <p class="smalltext">Publish to this site's configured PrivateBin server. Add an E2E key for password-based protection and, when available, choose how long to keep the notebook before publishing.</p>
+                <div class="d-grid gap-2">
                   <div class="form-group">
                     <div class="mb-3 row">
                       <label for="e2ekey" class="form-label col-sm-3">
@@ -47,237 +181,133 @@
                         <input type="password" name="e2ekey" class="form-control" [(ngModel)]="e2e_key" />
                       </div>
                     </div>
-                    <div class="mb-3 row">
-                      <label for="e2ekey" class="form-label col-sm-3">Server Info: <br /> [id #
-                        server_key]</label>
-                      <div class="col-sm-7">
-                        <input type="text" name="writekey" class="form-control" [(ngModel)]="editable_params" />
-                      </div>
-                      <div class="col-sm-2">
-                        <button class="btn btn-info col-sm-12" (click)="popup_editable_register()" title="Register an account">Register</button>
-                      </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="id" class="form-label col-sm-3">Symmetric Key</label>
-                      <div class="col-sm-7">
-                        <input type="text" name="writekey" class="form-control" readonly=true [(ngModel)]="editable_symmetric_key" />
-                      </div>
-                      <div class="col-sm-2">
-                        <button class="btn btn-success col-sm-12" (click)="new_symmetric_key()" title="new key">
-                          <i-bs name="arrow-clockwise"></i-bs>
-                        </button>
-                      </div>
-                      <p class="smalltext">E2E key is recommeneded. You can genereate a new symmetric key from the right button.</p>
-                    </div>
-                    <div class="mb-3 row" *ngIf="editable_edit_url">
-                      <div class="alert alert-success text-center" *ngIf="editable_published">
-                        Please <strong>keep a copy</strong> of the folling Url <strong>to yourself</strong> for further editing.<br/>No one but <strong>only you</strong> know the address.
-                      </div>
-                      <input type="text" class="form-control" readonly=true [(ngModel)]="editable_edit_url" onClick="this.select();" />
-                    </div>
-                    <div [ngbNavOutlet]="ehost"></div>
-                  </div>
-              </div>
-          </div>
-          <div class="custom-item">
-              <input type="checkbox" id="item3" name="item3" [checked]="getSelected() === 2" [value]="2" (change)="toggleItem(2)">
-              <label for="item3"><i-bs name="book"></i-bs> Create a new notebook</label>
-              <div class="custom-content">
-                <div class="form-group">
-                  <div class="d-grid gap-2">
-                    <button (click)="create_notebook()" class="btn btn-primary">New from scratch</button>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div class="custom-item">
-              <input type="checkbox" id="item4" name="item4" [checked]="getSelected() === 3" [value]="3" (change)="toggleItem(3)">
-              <label for="item4"><i-bs name="file-earmark-arrow-up-fill"></i-bs> Local Storage :: File</label>
-              <div class="custom-content">
-                <ul ngbNav #file="ngbNav" class="nav-tabs nav-pills">
-                  <li ngbNavItem>
-                    <a ngbNavLink>Load</a>
-                    <ng-template ngbNavContent>
+                    @if (config.privatebin.ttl) {
                       <div class="mb-3 row">
-                        <label for="file" class="form-label col-sm-2">
-                          <i-bs name="file-earmark"></i-bs> File
+                        <label for="id" class="form-label col-sm-3">
+                          <i-bs name="clock-fill"></i-bs> Time to Keep
                         </label>
-                        <div class="col-sm-10">
-                          <input type="file" #file_data (change)="handleFileInput()" class="form-control c-file col-sm-12" />
+                        <div class="col-sm-9">
+                          <select class="form-control" [(ngModel)]="ttl" aria-label>
+                            @for (t of config.privatebin.ttl; track t) {
+                              <option
+                                [value]="t.name">
+                                {{t.value}}
+                              </option>
+                            }
+                          </select>
                         </div>
                       </div>
-                      <div class="d-grid gap-2">
-                        <button (click)="load_from_file()" class="btn btn-primary" [disabled]="!file_s">Load</button>
-                      </div>
-                    </ng-template>
-                  </li>
-                  <li ngbNavItem> <a ngbNavLink>Legacy</a>
-                    <ng-template ngbNavContent>
-                      <div class="d-grid gap-2">
-                        <p class="smalltext">E2E key is recommeneded. Symetric key is within the file</p>
-                        <button (click)="save_privatebin_file(true)" class="btn btn-primary">Legacy</button>
-                      </div>
-                    </ng-template>
-                  </li>
-                  <li ngbNavItem> <a ngbNavLink>Save</a>
-                    <ng-template ngbNavContent>
-                      <div class="d-grid gap-2">
-                        <p class="smalltext">E2E key is recommeneded an file name is the symmetric key.</p>
-                        <button (click)="save_privatebin_file(false)" class="btn btn-primary">Save</button>
-                      </div>
-                    </ng-template>
-                  </li>
-                </ul>
-                <div class="form-group">
-                  <div class="mb-3 row">
-                    <label for="e2ekey" class="form-label col-sm-2">
-                      <i-bs name="key-fill"></i-bs> E2E Key
-                    </label>
-                    <div class="col-sm-10">
-                      <input type="password" name="e2ekey" class="form-control" [(ngModel)]="e2e_key" />
+                    }
+                    <div class="d-grid gap-2">
+                      <button (click)="publish_privatebin_remotely($event)" class="btn  btn-primary" [disabled]="!can_publish()">Publish as New</button>
                     </div>
                   </div>
-                  <div [ngbNavOutlet]="file"></div>
                 </div>
+              </ng-template>
+            </li>
+          }
+          <li ngbNavItem>
+            <a ngbNavLink (click)="get_plain_text()">Third-Party Remote</a>
+            <ng-template ngbNavContent>
+              <p class="smalltext">Use another PrivateBin host when this site has no publishing server or you prefer a different one. The data below is plain notebook text; the PrivateBin site handles encryption when you publish it.</p>
+              <div class="mb-3">
+                <label for="public_private_bin" class="form-label col-sm-12">Copy this data and publish it to a PrivateBin instance.</label>
+                <a target="_blank" href="https://privatebin.info/directory/">Browse the PrivateBin directory</a>. If the data area is empty, select the Third-Party Remote tab again.
+                <textarea name="public_private_bin" class="form-control col-sm-12" readonly="true" [(ngModel)]="plain_text_full_data" onClick="this.select();"></textarea>
+                <label for="decod_url" class="form-label col-sm-12">Paste the resulting PrivateBin URL here. The app will convert it into a notebook URL that you can share.</label>
+                <input name="decod_url" class="form-control col-sm-12" [(ngModel)]="remote_privatebin_data_url" />
               </div>
-          </div>
-          <div class="custom-item">
-              <input type="checkbox" id="item5" name="item5" [checked]="getSelected() === 4" [value]="4" (change)="toggleItem(4); get_plain_text()">
-              <label for="item5"><i-bs name="cloud"></i-bs> Web Host :: (Unmodifiable, Expirable) PrivateBin</label>
-              <div class="custom-content">
-                <ul ngbNav #privatebin="ngbNav" class="nav-tabs nav-pills">
-                  <li ngbNavItem *ngIf="config.privatebin">
-                    <a ngbNavLink>Publish</a>
-                    <ng-template ngbNavContent>
-                      <div class="d-grid gap-2">
-                        <div class="form-group">
-                          <div class="mb-3 row">
-                            <label for="e2ekey" class="form-label col-sm-3">
-                              <i-bs name="key-fill"></i-bs> E2E Key
-                            </label>
-                            <div class="col-sm-9">
-                              <input type="password" name="e2ekey" class="form-control" [(ngModel)]="e2e_key" />
-                            </div>
-                          </div>
-
-                          <div class="mb-3 row" *ngIf="config.privatebin.ttl">
-                            <label for="id" class="form-label col-sm-3">
-                              <i-bs name="clock-fill"></i-bs> Time to Keep
-                            </label>
-                            <div class="col-sm-9">
-                              <select class="form-control" [(ngModel)]="ttl" aria-label>
-                                <option *ngFor="let t of config.privatebin.ttl"
-                                        [value]="t.name">
-                                  {{t.value}}
-                                </option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="d-grid gap-2">
-                            <button (click)="publish_privatebin_remotely($event)" class="btn  btn-primary" [disabled]="!can_publish()">Publish as New</button>
-                          </div>
-                        </div>
-                      </div>
-                    </ng-template>
-                  </li>
-                  <li ngbNavItem>
-                    <a ngbNavLink (click)="get_plain_text()">Third Party Remote</a>
-                    <ng-template ngbNavContent>
-                      <div class="mb-3">
-                        <label for="public_private_bin" class="form-label col-sm-12">You can copy the following data and publish to privatebin</label>
-                        <a target="_blank" href="https://privatebin.info/directory/">PrivateBin Directory</a>. If nothing shows below, click above tab again.
-                        <textarea name="public_private_bin" class="form-control col-sm-12" readonly="true" [(ngModel)]="plain_text_full_data" onClick="this.select();"></textarea>
-                        <label for="decod_url" class="form-label col-sm-12">Then enter the remote
-                          privatebin Url: It will convert remote Url to the app one that is
-                          shareable</label>
-                        <input name="decod_url" class="form-control col-sm-12" [(ngModel)]="remote_privatebin_data_url" />
-                      </div>
-                      <p></p>
-                      <div class="d-grid gap-2">
-                        <button (click)="set_load_other_host_privatebin()" class="btn  btn-primary" [disabled]="!remote_privatebin_data_url">Load</button>
-                      </div>
-                    </ng-template>
-                  </li>
-                </ul>
-                <div class="form-group">
-                  <div [ngbNavOutlet]="privatebin"></div>
-                </div>
+              <p></p>
+              <div class="d-grid gap-2">
+                <button (click)="set_load_other_host_privatebin()" class="btn  btn-primary" [disabled]="!remote_privatebin_data_url">Load</button>
               </div>
-          </div>
-          <div class="custom-item">
-            <input type="checkbox" id="item6" name="item6" [checked]="getSelected() === 6" [value]="6" (change)="toggleItem(6)">
-            <label for="item6"><i-bs name="cloud-fill"></i-bs> No Backend</label>
-            <div class="custom-content">
-              <div class="form-group">
-                  <div class="d-grid gap-2">
-                    <div class="mb-3 row">
-                      <label for="e2ekey" class="form-label col-sm-3">
-                        <i-bs name="key-fill"></i-bs> E2E Key
-                      </label>
-                      <div class="col-sm-9">
-                        <input type="password" name="e2ekey" class="form-control" [(ngModel)]="e2e_key" />
-                      </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="id" class="form-label col-sm-2">URL:</label>
-                      <div class="col-sm-7">
-                        <input type="text" name="inlineurl" class="form-control" readonly=true [(ngModel)]="inline_url" onClick="this.select();"/>
-                      </div>
-                      <div class="col-sm-2">
-                        <button class="btn btn-success col-sm-12" (click)="new_inline_link()" title="new URL">
-                          <i-bs name="arrow-clockwise"></i-bs>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+            </ng-template>
+          </li>
+        </ul>
+        <div class="form-group">
+          <div [ngbNavOutlet]="privatebin"></div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-item">
+      <input type="checkbox" id="item6" name="item6" [checked]="getSelected() === 6" [value]="6" (change)="toggleItem(6)">
+      <label for="item6">No Backend</label>
+      <div class="custom-content">
+        <p class="section-description">Put an encrypted snapshot of your notebook directly in a shareable URL, with no notebook server storing the content. Select the generate button and copy the entire URL. After editing, generate a new URL to include your changes.</p>
+        <p class="smalltext">Best for small notebooks: long URLs may exceed browser or messaging limits. Keep the link private, and add an E2E key for password-based protection. Anyone with the complete link can open the notebook if no E2E key is set.</p>
+        <div class="form-group">
+          <div class="d-grid gap-2">
+            <div class="mb-3 row">
+              <label for="e2ekey" class="form-label col-sm-3">
+                <i-bs name="key-fill"></i-bs> E2E Key
+              </label>
+              <div class="col-sm-9">
+                <input type="password" name="e2ekey" class="form-control" [(ngModel)]="e2e_key" />
               </div>
             </div>
+            <div class="mb-3 row">
+              <label for="id" class="form-label col-sm-2">URL:</label>
+              <div class="col-sm-7">
+                <input type="text" name="inlineurl" class="form-control" readonly=true [(ngModel)]="inline_url" onClick="this.select();"/>
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-success col-sm-12" (click)="new_inline_link()" title="Generate a new URL">
+                  <i-bs name="arrow-clockwise"></i-bs>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</main>
 
-  <ng-template #popE2EKey let-c="close" let-d="dismiss">
-    <div class="modal-header">
-      <h4 class="modal-title">Decrypting Key</h4>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="alert alert-danger" role="alert" *ngIf="is_unsupported_browser()">
+<ng-template #popE2EKey let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Decrypting Key</h4>
+  </div>
+  <div class="modal-body">
+    <div>
+      @if (is_unsupported_browser()) {
+        <div class="alert alert-danger" role="alert">
           The browser you are using does not support encryption. Are you using https?
         </div>
-        <div class="alert alert-danger" role="alert" *ngIf="!is_https()">
+      }
+      @if (!is_https()) {
+        <div class="alert alert-danger" role="alert">
           This app only supports https!
         </div>
-        <div class="mb-3 row d-flex justify-content-center">
-          <label for="e2ekey" class="form-label col-sm-10 text-center alert alert-warning">
-            <i-bs name="exclamation-diamond-fill" class="fa-4x"></i-bs> Password
-          </label>
-          <div class="col-sm-10">
+      }
+      <div class="mb-3 row d-flex justify-content-center">
+        <label for="e2ekey" class="form-label col-sm-10 text-center alert alert-warning">
+          <i-bs name="exclamation-diamond-fill" class="fa-4x"></i-bs> Password
+        </label>
+        <div class="col-sm-10">
           <input type="password" name="e2ekey" class="form-control text-center" [(ngModel)]="e2e_key" (keyup.enter)="c('Save click')" />
-        </div>
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Update</button>
-    </div>
-  </ng-template>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Update</button>
+  </div>
+</ng-template>
 
-  <ng-template #popEmail let-c="close" let-d="dismiss">
-    <div class="modal-header">
-      <h4 class="modal-title">Register an account</h4>
-      <button type="button" class="close" aria-describedby="modal-title" (click)="c('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <form [formGroup]="userEmail" id="userEmail" (ngSubmit)="editable_email_register(userEmail.value)" *ngIf="!editiable_registed">
+<ng-template #popEmail let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Register an account</h4>
+    <button type="button" class="close" aria-describedby="modal-title" (click)="c('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      @if (!editiable_registed) {
+        <form [formGroup]="userEmail" id="userEmail" (ngSubmit)="editable_email_register(userEmail.value)">
           <div class="alert alert-info" role="alert">
-            Please provide an Email address and the information will be send to you. We will not save or share your email.
+            Enter your email address to receive the registration information.
           </div>
-
           <div class="mb-3 d-flex">
             <div class="col-sm-3">
               <label for="email" class="form-label">
@@ -288,11 +318,16 @@
             <button class="btn btn-primary col-sm-1 btn-sm float-right" type="submit" [disabled]="userEmail.get('email')!.invalid">Submit</button>
           </div>
         </form>
-        <div class="alert alert-danger" *ngIf="editiable_registed == 'F'">Fail to register, may be contact the server administrator?</div>
-        <div class="alert alert-success" *ngIf="editiable_registed == 'S'">Email with info sent. Please check your email and it may be in your spam folder.</div>
-      </div>
+      }
+      @if (editiable_registed == 'F') {
+        <div class="alert alert-danger">Registration failed. Please contact the server administrator.</div>
+      }
+      @if (editiable_registed == 'S') {
+        <div class="alert alert-success">The email was sent. Please check your inbox and spam folder.</div>
+      }
     </div>
-    <div class="modal-footer">
+  </div>
+  <div class="modal-footer">
 
-    </div>
-  </ng-template>
+  </div>
+</ng-template>

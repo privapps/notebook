@@ -1,9 +1,162 @@
 /* You can add global styles to this file, and also import other style files */
 
-ngx-md table {
+app-notes .notebook-layout.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); }
+app-notes .editing-workspace > * { min-width: 0; }
+app-notes .editing-help {
+  flex: 0 0 100%;
+  margin: 0;
+  color: #758078;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+app-notes .editing-workspace.editing .note-content,
+app-notes .editing-workspace.editing .note-content markdown {
+  min-width: 0;
+  max-width: 100%;
+}
+
+app-notes .editing-workspace.editing .note-content markdown :is(p, li, blockquote, h1, h2, h3, h4, h5, h6, a, th, td) {
+  overflow-wrap: anywhere;
+}
+
+app-notes .editing-workspace.editing .note-content markdown .code-toolbar,
+app-notes .editing-workspace.editing .note-content markdown pre {
+  max-width: 100%;
+}
+
+app-notes .editing-workspace.editing .note-content markdown pre {
+  overflow-x: auto;
+}
+
+app-notes .editing-workspace.editing .note-content markdown pre code {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+app-notes .editing-workspace.editing .note-content markdown table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+app-notes .editing-workspace.editing .note-content markdown img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (min-width: 960px) {
+  app-notes .editing-workspace.split { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+markdown table {
     width: 100%;
 }
 
-ngx-md table tr:nth-child(even) {
+markdown table tr:nth-child(even) {
     background: #efefef;
+}
+
+.markdown-code-labels .code-toolbar {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.markdown-code-labels .code-toolbar > .toolbar {
+  position: static;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 1;
+  padding: 0.25rem 0.5rem;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+}
+
+.markdown-code-labels .code-toolbar > pre[class*="language-"] {
+  margin: 0;
+}
+
+.markdown-code-labels .toolbar-item > span {
+  padding: 0;
+  color: #212529;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: none;
+  box-shadow: none;
+}
+
+.note-content markdown p { margin: 0 0 16px; }
+.note-content markdown ul { margin: 0 0 16px; padding-left: 22px; }
+.note-content markdown li { padding-left: 3px; }
+.note-content markdown li::marker { color: #6b9a7e; }
+.note-content markdown a { color: #326e53; text-decoration-color: #a3c3ae; text-underline-offset: 3px; }
+.settings-help markdown h4 { margin: 0 0 12px; color: #27382d; font-family: Georgia, "Times New Roman", serif; font-size: 22px; font-weight: 500; line-height: 1.3; }
+.settings-help markdown h4:not(:first-child) { margin-top: 28px; }
+.settings-help markdown h5 { margin: 22px 0 8px; color: #27382d; font-size: 16px; font-weight: 600; }
+.settings-help markdown code { padding: 1px 4px; border-radius: 3px; background: #f2f5f1; color: #345e4c; }
+
+.settings-page .custom-content .nav-tabs { gap: 4px; margin-bottom: 18px; padding-bottom: 8px; border-color: #e3e8e2; }
+.settings-page .custom-content .nav-link { padding: 8px 12px; border: 0; border-radius: 7px; color: #5d6b62; font-size: 13px; font-weight: 600; }
+.settings-page .custom-content .nav-link:hover { color: #2f624b; background: #ebf0eb; }
+.settings-page .custom-content .nav-link.active { color: #2f624b; background: #e8f1eb; }
+.settings-page .custom-content .nav-link:focus-visible,
+.settings-page .custom-content .btn:focus-visible { outline: 3px solid #a5c7b6; outline-offset: 2px; }
+.settings-page .custom-content .row { align-items: center; row-gap: 8px; }
+.settings-page .custom-content .form-label { margin-bottom: 0; color: #53645a; font-size: 13px; font-weight: 600; }
+.settings-page .custom-content .form-control { border-color: #d5dfd7; background: #fff; color: #26312d; }
+.settings-page .custom-content .form-control:focus { border-color: #6b9a7e; box-shadow: 0 0 0 3px rgb(107 154 126 / 18%); }
+.settings-page .custom-content input[readonly],
+.settings-page .custom-content textarea[readonly] { background: #f3f6f3 !important; }
+.settings-page .custom-content textarea { min-height: 130px; }
+.settings-page .custom-content a:not(.nav-link) { color: #326e53; text-decoration-color: #a3c3ae; text-underline-offset: 3px; }
+.settings-page .custom-content .smalltext { margin: 0 0 12px; color: #758078; font-size: 12px; line-height: 1.5; }
+.settings-page .custom-content .btn-primary,
+.settings-page .custom-content .btn-info,
+.settings-page .custom-content .btn-success { border-color: #4a7967; background: #4a7967; color: #fff; }
+.settings-page .custom-content .btn-primary:hover,
+.settings-page .custom-content .btn-info:hover,
+.settings-page .custom-content .btn-success:hover { border-color: #345e4c; background: #345e4c; }
+
+@media (max-width: 680px) {
+  .settings-page .custom-content .form-label { margin-bottom: 4px; }
+}
+
+.notebook-heading { margin: 0 0 13px; text-align: center; }
+.notebook-heading h1 {
+  margin: 0;
+  color: #24372d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(27px, 3vw, 34px);
+  font-weight: 500;
+  letter-spacing: -.025em;
+  line-height: 1.2;
+}
+.notebook-heading p { margin: 4px 0 0; color: #758078; font-size: 13px; line-height: 1.4; }
+
+.note-card, .editor-card {
+  border: 1px solid #e3e8e2;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 6px 22px rgb(39 60 45 / 4%);
+}
+.note-card { min-height: 350px; }
+.note-card .card-body, .editor-card .card-body { padding: clamp(24px, 4vw, 43px) clamp(24px, 4.5vw, 49px); }
+.note-card .card-title {
+  margin: 0;
+  color: #27382d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+.note-card .date { margin: 7px 0 30px; color: #869088; font-size: 12px; }
+.note-content { color: #3c4840; font-size: 15px; line-height: 1.8; }
+.editor-card { margin-bottom: 16px; }
+.editor-card .form-group + .form-group { margin-top: 12px; }
+.editor-card textarea { min-height: 180px; resize: vertical; }
+.editor-card .smalltext { margin: 10px 0 0; color: #758078; font-size: 12px; }
+
+@media (max-width: 680px) {
+  .notebook-heading { margin-bottom: 12px; }
+  .note-card { min-height: 270px; }
 }

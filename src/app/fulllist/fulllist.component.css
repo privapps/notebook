@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.all-notes-list {
+  display: grid;
+  gap: 16px;
+}
+
+@media (max-width: 680px) {
+  .all-notes-list {
+    gap: 12px;
+  }
+}

@@ -1,101 +1,107 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="h2 text-center" *ngIf="!is_writing">{{metadata.name}}</div>
-            <div *ngIf="is_writing">
-                <input name="title" type="text" class="form-control text-center form-control-lg" [(ngModel)]="metadata.name" placeholder="Title" />
-            </div>
-            <div *ngIf="!is_writing && metadata.description" class="text-center font-weight-light col-sm-12">
-                {{metadata.description}}</div>
-            <div *ngIf="is_writing">
-                <input name="desc" type="text" class="form-control form-control-sm text-center" [(ngModel)]="metadata.description" placeholder="Description" />
-            </div>
-        </div>
-        <div class="col-sm-2 list-menu" *ngIf="notes.length>1">
-            <div class="col-sm-12">
-                <button class="btn btn-secondary btn-sm col-sm-12" (click)="open(allNotes)">View All</button>
-                <br /> <br />
-            </div>
+<div class="notebook-page">
+  <div class="notebook-layout" [class.single-note]="notes.length <= 1" [class.sidebar-collapsed]="is_notes_sidebar_hidden">
+    @if (notes.length > 1) {
+      <aside id="notes-sidebar" class="list-menu" aria-label="Notes navigation"
+        [hidden]="is_notes_sidebar_hidden"
+        [attr.aria-hidden]="is_notes_sidebar_hidden ? 'true' : null"
+        [attr.inert]="is_notes_sidebar_hidden ? '' : null">
+        <button class="view-all" type="button" (click)="open(allNotes)">View All</button>
+        <ul ngbNav #navMenu="ngbNav" [(activeId)]="selected_id" class="nav nav-pills note-menu" orientation="vertical">
+          @for (data of notes; track data; let i = $index) {
+            <li [ngbNavItem]="i">
+              <a ngbNavLink [routerLink]="['/notes', i, url_extra]" (click)="get_current_note()">{{data.name}}</a>
+              <ng-template ngbNavContent></ng-template>
+            </li>
+          }
+        </ul>
+        <div [ngbNavOutlet]="navMenu"></div>
+      </aside>
+    }
 
-            <div class="d-flex">
-                <ul ngbNav #navMenu="ngbNav" [(activeId)]="selected_id" class="nav-pills" orientation="vertical" [class.more-navs]="notes.length > 12">
-                    <span *ngFor="let data of notes; let i = index">
-                        <li [ngbNavItem]='i'>
-                            <a ngbNavLink [routerLink]="['/notes',i,url_extra]" (click)="get_current_note()"
-                                class="btn btn-light">{{data.name}}</a>
-                            <ng-template ngbNavContent></ng-template>
-                        </li>
-                    </span>
-                </ul>
-            </div>
-            <div [ngbNavOutlet]="navMenu" class="mt-1"></div>
-        </div>
+    <main class="content-space">
+      <header class="notebook-heading">
+        @if (!is_writing) {
+          <h1>{{metadata.name}}</h1>
+        } @else {
+          <input name="title" type="text" class="form-control notebook-title-input" [(ngModel)]="metadata.name" placeholder="Title" aria-label="Notebook title" />
+        }
+        @if (!is_writing && metadata.description) {
+          <p>{{metadata.description}}</p>
+        } @else if (is_writing) {
+          <input name="desc" type="text" class="form-control notebook-description-input" [(ngModel)]="metadata.description" placeholder="Description" aria-label="Notebook description" />
+        }
+      </header>
 
-        <div class="col-sm-10 content-space" [ngClass]="{'col-sm-12' : notes.length<=1}">
-            <!-- main working area-->
-            <ngb-alert #shortAlert *ngIf="alert_message" type="warning" (closed)="alert_message = ''">
-                <i-bs name="exclamation-circle-fill" class="fa-2x"></i-bs> {{ alert_message }}
-            </ngb-alert>
-            <div>
-                <div class="col-sm-12">
-                    <div class="col-sm-7 form-check-inline">
-                        <input class="form-check-input" type="checkbox" [(ngModel)]="is_writing" (click)="update_writing()" id="flexSwitchCheckDefault">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">
-                            <i-bs name="pencil-fill" width="1.3rem" height="1.3rem"></i-bs>
-                        </label>
+      @if (alert_message) {
+        <ngb-alert #shortAlert type="warning" (closed)="alert_message = ''">
+          <i-bs name="exclamation-circle-fill" class="fa-2x"></i-bs> {{ alert_message }}
+        </ngb-alert>
+      }
 
-                    </div>
-                    <div class="btn-group thread-control col-sm-4" role="group" *ngIf="is_writing">
-                        <button title="Delete" type="button" class="btn btn-danger" (click)="delete_note()" [routerLink]="['/notes', selected_id-1 > 0 ? selected_id-1 : 0]" [disabled]="notes.length<=1">
-                            <i-bs name="trash-fill"></i-bs>
-                        </button>
-                        <button title="Move up" type="button" class="btn btn-secondary" (click)="move_note(true)" [disabled]="selected_id == 0" [routerLink]="['/notes',selected_id-1]">
-                            <i-bs name="caret-up-fill"></i-bs>
-                        </button>
-                        <button title="Move down" type="button" class="btn btn-secondary" (click)="move_note(false)" [disabled]="selected_id == notes.length -1" [routerLink]="['/notes',selected_id+1]">
-                            <i-bs name="caret-down-fill"></i-bs>
-                        </button>
-                        <button title="Create" type="button" class="btn btn-primary" (click)="add_note()">
-                            <i-bs name="file-earmark-plus-fill"></i-bs>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card col-sm-12" *ngIf="is_writing">
-                <form class="card-body">
-                    <div class="form-group">
-                        <input name="title" class="form-control" size="85" [(ngModel)]="selected_note.name" placeholder="Name" />
-                    </div>
-                    <div class="form-group">
-                        <textarea name="content" rows="8" cols="80" class="form-control" [(ngModel)]="selected_note.content" style="font-size: 80%" placeholder="Markdown supported!"></textarea>
-                    </div>
-                    <p class="card-text smalltext">More information about <a target="_blank" href="https://dimpu.github.io/ngx-md/">Markdown</a></p>
-                </form>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">{{selected_note.name}}</h3>
-                    <p class="card-subtitle date">{{selected_note.date | date:'short' }}</p>
-                    <p class="card-text">
-                        <ngx-md [data]="selected_note.content"></ngx-md>
-                    </p>
-                </div>
-            </div>
-            <div>
-            </div>
-        </div>
-    </div>
-
-    <ng-template #allNotes let-modal>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">All Notes</h4>
-            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                <span aria-hidden="true">&times;</span>
+      <div class="edit-row">
+        <label class="edit-mode" for="edit-mode">
+          <input class="form-check-input" type="checkbox" [(ngModel)]="is_writing" (click)="update_writing()" id="edit-mode" aria-label="Edit mode">
+          <i-bs name="pencil-fill" width="1rem" height="1rem"></i-bs>
+        </label>
+        @if (is_writing) {
+          @if (notes.length > 1) {
+            <button type="button" class="btn btn-outline-secondary toggle-notes" aria-controls="notes-sidebar"
+              aria-describedby="editing-layout-help" [attr.aria-expanded]="!is_notes_sidebar_hidden" (click)="toggle_notes_sidebar()">
+              {{ is_notes_sidebar_hidden ? 'Show sidebar' : 'Hide sidebar' }}
             </button>
-        </div>
-        <div class="modal-body">
-            <app-fulllist></app-fulllist>
-        </div>
-    </ng-template>
+          }
+          <div class="btn-group thread-control" role="group" aria-label="Note actions">
+            <button title="Delete" type="button" class="btn btn-danger" (click)="delete_note()" [disabled]="notes.length <= 1">
+              <i-bs name="trash-fill"></i-bs>
+            </button>
+            <button title="Move up" type="button" class="btn btn-secondary" (click)="move_note(true)" [disabled]="selected_id == 0">
+              <i-bs name="caret-up-fill"></i-bs>
+            </button>
+            <button title="Move down" type="button" class="btn btn-secondary" (click)="move_note(false)" [disabled]="selected_id == notes.length - 1">
+              <i-bs name="caret-down-fill"></i-bs>
+            </button>
+            <button title="Create" type="button" class="btn btn-primary" (click)="add_note()">
+              <i-bs name="file-earmark-plus-fill"></i-bs>
+            </button>
+          </div>
+          <p class="editing-help" id="editing-layout-help">
+            @if (notes.length > 1) {
+              Hide sidebar and Show sidebar toggle the note-list navigation.
+            }
+            With the sidebar hidden on wide screens, the editor appears on the left and its preview is on the right; with the sidebar shown or on narrow screens, they stack. Single-note notebooks split automatically on wide screens. Leaving edit mode restores navigation and resets this layout choice.
+          </p>
+        }
+      </div>
+
+      <div class="editing-workspace d-grid gap-4 align-items-start" [class.editing]="is_writing" [class.reading-view]="!is_writing" [class.split]="is_writing && (notes.length <= 1 || notes_collapsed)">
+        @if (is_writing) {
+          <section class="card editor-card" aria-label="Markdown editor">
+            <form class="card-body">
+              <div class="form-group">
+                <input name="title" class="form-control" size="85" [(ngModel)]="selected_note.name" placeholder="Name" aria-label="Note name" />
+              </div>
+              <div class="form-group">
+                <textarea name="content" rows="8" cols="80" class="form-control" [(ngModel)]="selected_note.content" placeholder="Enter Markdown content here." aria-label="Note content"></textarea>
+              </div>
+              <p class="card-text smalltext"><a target="_blank" href="https://jfcere.github.io/ngx-markdown/">Learn more about Markdown</a></p>
+            </form>
+          </section>
+        }
+
+        <article app-note-card [note]="selected_note" aria-label="Rendered note preview"></article>
+      </div>
+    </main>
+  </div>
+
+  <ng-template #allNotes let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">All Notes</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <app-fulllist></app-fulllist>
+    </div>
+  </ng-template>
+</div>

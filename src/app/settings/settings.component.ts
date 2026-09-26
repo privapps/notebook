@@ -8,10 +8,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LegacyService } from '../legacy.service'
 import { UntypedFormGroup, UntypedFormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms'; // Added FormsModule
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { NgbModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap'; // Import main NgbModule and NgbAccordionModule
 import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons'; // Import NgxBootstrapIconsModule
-import { NgxMdModule } from 'ngx-md'; // Import NgxMdModule
+import { MarkdownModule } from 'ngx-markdown';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
@@ -19,14 +19,13 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css'],
   standalone: true, // Make standalone
-  imports: [ // Add imports array
-    CommonModule,
+  imports: [
     ReactiveFormsModule,
-    FormsModule, // Keep FormsModule
-    NgbModule, // Use main NgbModule
-    NgbAccordionModule, // Import NgbAccordionModule
-    NgxBootstrapIconsModule, // Add NgxBootstrapIconsModule
-    NgxMdModule // Add NgxMdModule
+    FormsModule,
+    NgbModule,
+    NgbAccordionModule,
+    NgxBootstrapIconsModule,
+    MarkdownModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -156,11 +155,15 @@ export class SettingsComponent implements OnInit {
     if (!this.service.parameters.base64 || !this.service.parameters.symmetric) {
       throw new Error('Missing inline data')
     }
-    const b64 = this.service.parameters.base64.replace('.', '/')
-    const jsond = atob(b64)
-    this.service.load_privatebin_inline(jsond, this.service.parameters.symmetric, this.e2e_key,
-      () => this.next(), () => this.request_new_password(),
-      () => this.handle_fail_decrypt(), (error: any) => this.handle_fail_fetch(error))
+    try {
+      const b64 = this.service.parameters.base64.replaceAll('.', '/')
+      const jsond = atob(b64)
+      this.service.load_privatebin_inline(jsond, this.service.parameters.symmetric, this.e2e_key,
+        () => this.next(), () => this.request_new_password(),
+        () => this.handle_fail_decrypt(), (error: any) => this.handle_fail_fetch(error))
+    } catch (error) {
+      this.handle_fail_fetch(error)
+    }
   }
   load_editable_privatebin() {
     if (!this.service.parameters.id) {
@@ -439,7 +442,7 @@ export class SettingsComponent implements OnInit {
     const pathname = window.location.pathname;
     const prefix = `${origin}${pathname}#/notes/0/type,inline&symmetric,${s_key}&base64`;
     this.service.get_encrypted_data(this.e2e_key, s_key).then(json => {
-      const data = btoa(JSON.stringify(json)).replace('/', '.')
+      const data = btoa(JSON.stringify(json)).replaceAll('/', '.')
       this.inline_url = `${prefix},${data}`
     })
   }

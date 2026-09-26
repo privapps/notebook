@@ -1,1 +1,1 @@
-ng s --proxy-config proxy.conf.json
+npm start -- --proxy-config proxy.conf.json

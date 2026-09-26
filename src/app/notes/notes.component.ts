@@ -7,17 +7,7 @@ import { Metadata, Note } from '../data_inteface'
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { HashLocationStrategy, Location, LocationStrategy } from '@angular/common';
-
-import * as Prism from 'prismjs';
-
-
-import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-css';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-yaml';
+import { Prism } from '../prism';
 
 @Component({
     selector: 'app-notes',
@@ -34,13 +24,18 @@ export class NotesComponent implements OnInit, AfterViewInit {
   notes: Note[] = []
   metadata: Metadata = {} as Metadata
   is_writing: boolean = false
+  notes_collapsed: boolean = false
   url_extra: string | null = null
 
-  @ViewChild('navMenu') nav_menu: NgbNav = {} as NgbNav
+  @ViewChild('navMenu') nav_menu?: NgbNav
   @ViewChild('shortAlert', { static: false }) short_alert: NgbAlert = {} as NgbAlert
 
   alert_message = '';
   private alert_subj = new Subject<string>();
+
+  get is_notes_sidebar_hidden(): boolean {
+    return this.is_writing && this.notes.length > 1 && this.notes_collapsed
+  }
 
   constructor(private service: BackboneService,
     private router: Router,
@@ -111,7 +106,6 @@ export class NotesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /** a workaround to reset markdown preview https://github.com/dimpu/ngx-md/issues/186 */
   private reset_markdown(): Promise<void> {
     return Promise.resolve().then(() => {
       let data = this.service.notes[this.selected_id]
@@ -132,8 +126,9 @@ export class NotesComponent implements OnInit, AfterViewInit {
       return
     }
     this.service.note_position_up(this.selected_id, up)
-    let position = this.selected_id + (up ? -1 : +1)
-    this.nav_menu.select(position)
+    this.selected_id += up ? -1 : 1
+    this.get_current_note()
+    this.navigate_to_note()
   }
   delete_note() {
     if (!confirm("Are you sure to delete it?")) {
@@ -145,9 +140,9 @@ export class NotesComponent implements OnInit, AfterViewInit {
     if (next < 0) {
       next = 0
     }
-    // this.nav_menu.select(next)
     this.selected_id = next
     this.get_current_note()
+    this.navigate_to_note()
   }
   get_current_note(): Promise<Note> {
     this.selected_note = this.service.notes[this.selected_id]
@@ -172,9 +167,18 @@ export class NotesComponent implements OnInit, AfterViewInit {
     }
     this.selected_id = this.notes.length - 1
     this.get_current_note()
+    this.navigate_to_note()
+  }
+  private navigate_to_note() {
+    this.router.navigate(['/notes', this.selected_id, this.url_extra ?? ''])
   }
   open(allNotes: any) {
     this.modalService.open(allNotes, { size: 'xl', scrollable: true, backdrop: true, keyboard: true })
+  }
+  toggle_notes_sidebar() {
+    if (this.is_writing && this.notes.length > 1) {
+      this.notes_collapsed = !this.notes_collapsed
+    }
   }
   update_writing() {
     let editing = !this.is_writing // there is a delay to make the changes
@@ -187,6 +191,9 @@ export class NotesComponent implements OnInit, AfterViewInit {
     }
     if (!editing && this.service.is_content_changed()) {
       alert('Make sure to save the changes if you made modification.')
+    }
+    if (!editing) {
+      this.notes_collapsed = false
     }
     this.service.is_editing = editing
   }

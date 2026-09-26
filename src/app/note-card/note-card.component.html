@@ -1,0 +1,7 @@
+<div class="card-body">
+  <h2 class="card-title">{{note.name}}</h2>
+  <p class="card-subtitle date">{{note.date | date:'short' }}</p>
+  <div class="card-text note-content">
+    <markdown class="markdown-code-labels" [data]="note.content"></markdown>
+  </div>
+</div>
