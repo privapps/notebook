@@ -1,4 +1,4 @@
-<div class="notebook-page">
+<div class="page-container notebook-page">
   <div class="notebook-layout" [class.single-note]="notes.length <= 1" [class.sidebar-collapsed]="is_notes_sidebar_hidden">
     @if (notes.length > 1) {
       <aside id="notes-sidebar" class="list-menu" aria-label="Notes navigation"
@@ -20,15 +20,15 @@
 
     <main class="content-space">
       <header class="notebook-heading">
-        @if (!is_writing) {
-          <h1>{{metadata.name}}</h1>
-        } @else {
+        @if (is_writing) {
           <input name="title" type="text" class="form-control notebook-title-input" [(ngModel)]="metadata.name" placeholder="Title" aria-label="Notebook title" />
+        } @else if ((metadata.name || '').trim()) {
+          <h1>{{metadata.name}}</h1>
         }
-        @if (!is_writing && metadata.description) {
-          <p>{{metadata.description}}</p>
-        } @else if (is_writing) {
+        @if (is_writing) {
           <input name="desc" type="text" class="form-control notebook-description-input" [(ngModel)]="metadata.description" placeholder="Description" aria-label="Notebook description" />
+        } @else if ((metadata.description || '').trim()) {
+          <p>{{metadata.description}}</p>
         }
       </header>
 

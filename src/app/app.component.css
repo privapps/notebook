@@ -5,13 +5,17 @@
 }
 
 .site-nav-links {
-  width: min(1120px, calc(100% - 48px));
+  width: min(1440px, calc(100% - 40px));
   min-height: 62px;
   align-items: flex-end;
   gap: 4px;
   margin: 0 auto;
   padding: 0;
 }
+
+.site-nav .github-link { margin-left: auto; }
+.site-nav li:first-child .nav-link { padding-left: 0; }
+.site-nav .github-link .nav-link { padding-right: 0; }
 
 .site-nav .nav-link {
   padding: 18px 19px 17px;
@@ -42,6 +46,8 @@
 @media (max-width: 680px) {
   .site-nav,
   .site-nav-links { min-height: 55px; }
-  .site-nav-links { width: calc(100% - 30px); }
+  .site-nav-links { width: calc(100% - 24px); }
   .site-nav .nav-link { padding: 16px 14px 14px; }
+  .site-nav li:first-child .nav-link { padding-left: 0; }
+  .site-nav .github-link .nav-link { padding-right: 0; }
 }

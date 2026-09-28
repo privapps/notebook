@@ -1,4 +1,4 @@
-<main class="settings-page">
+<main class="page-container settings-page">
       @if (is_unsupported_browser()) {
         <div class="alert alert-danger" role="alert">
           The browser you are using does not support encryption. Are you using https?
@@ -233,7 +233,7 @@
       <input type="checkbox" id="item6" name="item6" [checked]="getSelected() === 6" [value]="6" (change)="toggleItem(6)">
       <label for="item6">No Backend</label>
       <div class="custom-content">
-        <p class="section-description">Put an encrypted snapshot of your notebook directly in a shareable URL, with no notebook server storing the content. Select the generate button and copy the entire URL. After editing, generate a new URL to include your changes.</p>
+        <p class="section-description">Put an encrypted snapshot of your notebook directly in shareable URLs, with no notebook server storing the content. Generate both a Notebook Web URL and a compact, read-only Notebook Lite URL from the same snapshot, then copy the one you want to share. After editing, generate both again to include your changes.</p>
         <p class="smalltext">Best for small notebooks: long URLs may exceed browser or messaging limits. Keep the link private, and add an E2E key for password-based protection. Anyone with the complete link can open the notebook if no E2E key is set.</p>
         <div class="form-group">
           <div class="d-grid gap-2">
@@ -246,21 +246,62 @@
               </div>
             </div>
             <div class="mb-3 row">
-              <label for="id" class="form-label col-sm-2">URL:</label>
+              <label for="inlineurl" class="form-label col-sm-2">Notebook Web:</label>
               <div class="col-sm-7">
-                <input type="text" name="inlineurl" class="form-control" readonly=true [(ngModel)]="inline_url" onClick="this.select();"/>
+                <input id="inlineurl" type="text" name="inlineurl" class="form-control" readonly="true"
+                  [(ngModel)]="inline_url" (click)="$any($event.target).select()" />
               </div>
               <div class="col-sm-2">
-                <button class="btn btn-success col-sm-12" (click)="new_inline_link()" title="Generate a new URL">
+                <button type="button" class="btn btn-success col-sm-12" (click)="new_inline_link()"
+                  aria-label="Generate both share URLs" title="Generate both URLs">
                   <i-bs name="arrow-clockwise"></i-bs>
                 </button>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="notebookLiteUrl" class="form-label col-sm-2">Read-only URL:</label>
+              <div class="col-sm-10">
+                <input id="notebookLiteUrl" type="text" name="notebookLiteUrl" class="form-control" readonly="true"
+                  [(ngModel)]="notebook_lite_url" (click)="$any($event.target).select()" />
               </div>
             </div>
           </div>
         </div>
       </div>
+      </div>
+      <div class="custom-item">
+        <input type="checkbox" id="item7" name="item7" [checked]="getSelected() === 7" [value]="7" (change)="toggleItem(7)">
+        <label for="item7">Convert to Notebook Lite</label>
+        <div class="custom-content">
+          <p class="section-description">Convert a Notebook Web share URL to Notebook Lite format while preserving its encrypted data and storage location. This does not load or change the notebook open in this tab.</p>
+          <p class="smalltext">Notebook Lite will ask for the E2E password when you open the converted link if the source is password protected. Stored links continue to use their original backend and must remain reachable.</p>
+          @if (notebook_lite_conversion_message) {
+            <div id="notebookLiteConversionMessage" class="alert alert-danger" role="alert">{{ notebook_lite_conversion_message }}</div>
+          }
+          <div class="form-group">
+            <div class="mb-3 row">
+              <label for="notebookLiteSourceUrl" class="form-label col-sm-2">Notebook Web URL:</label>
+              <div class="col-sm-10">
+                <input id="notebookLiteSourceUrl" type="url" name="notebookLiteSourceUrl" class="form-control" [(ngModel)]="notebook_lite_source_url" autocomplete="url" />
+              </div>
+            </div>
+            <div class="d-grid gap-2 mb-3">
+              <button type="button" class="btn btn-primary" (click)="convert_notebook_lite_url()" [disabled]="!notebook_lite_source_url.trim()">
+                Convert to Notebook Lite
+              </button>
+            </div>
+            @if (notebook_lite_converted_url) {
+              <div class="mb-3 row">
+                <label for="notebookLiteConvertedUrl" class="form-label col-sm-2">Notebook Lite URL:</label>
+                <div class="col-sm-10">
+                  <input id="notebookLiteConvertedUrl" type="text" name="notebookLiteConvertedUrl" class="form-control" readonly="true" [(ngModel)]="notebook_lite_converted_url" (click)="$any($event.target).select()" aria-label="Converted Notebook Lite URL" />
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 </main>
 
 <ng-template #popE2EKey let-c="close" let-d="dismiss">

@@ -13,11 +13,12 @@ import { NgbModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap'; // I
 import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons'; // Import NgxBootstrapIconsModule
 import { MarkdownModule } from 'ngx-markdown';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NotebookLiteUrlConverterService } from '../notebook-lite-url-converter.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css'],
+  styleUrls: ['./settings.component.css', '../page-container.css'],
   standalone: true, // Make standalone
   imports: [
     ReactiveFormsModule,
@@ -52,6 +53,10 @@ export class SettingsComponent implements OnInit {
   note_page: number = 0
 
   inline_url: string = ''
+  notebook_lite_url: string = ''
+  notebook_lite_source_url: string = ''
+  notebook_lite_converted_url: string = ''
+  notebook_lite_conversion_message = ''
 
   userEmail = new UntypedFormGroup({
     email: new UntypedFormControl('', [Validators.required,
@@ -70,7 +75,8 @@ export class SettingsComponent implements OnInit {
   constructor(private service: BackboneService,
     private modalService: NgbModal,
     private legacy: LegacyService,
-    private aRoute: ActivatedRoute) {
+    private aRoute: ActivatedRoute,
+    private notebookLiteConverter: NotebookLiteUrlConverterService) {
   }
 
   async ngOnInit() {
@@ -436,14 +442,32 @@ export class SettingsComponent implements OnInit {
   getSelected(): number {
     return this.service.getSelectedSettingIndex()
   }
-  new_inline_link() {
-    const s_key = this.service.new_symmetric_key()
-    const origin = window.location.origin;
-    const pathname = window.location.pathname;
-    const prefix = `${origin}${pathname}#/notes/0/type,inline&symmetric,${s_key}&base64`;
-    this.service.get_encrypted_data(this.e2e_key, s_key).then(json => {
-      const data = btoa(JSON.stringify(json)).replaceAll('/', '.')
-      this.inline_url = `${prefix},${data}`
-    })
+  async new_inline_link() {
+    try {
+      const symmetricKey = this.service.new_symmetric_key()
+      const encryptedData = await this.service.get_encrypted_data(this.e2e_key, symmetricKey)
+      const encodedData = btoa(JSON.stringify(encryptedData)).replaceAll('/', '.')
+      const webUrl = `${window.location.origin}${window.location.pathname}#/notes/0/type,inline&symmetric,${symmetricKey}&base64,${encodedData}`
+      const notebookLiteUrl = `https://privapps.github.io/Notebook-lite/#${symmetricKey}@${encodedData}`
+
+      this.inline_url = webUrl
+      this.notebook_lite_url = notebookLiteUrl
+    } catch (error) {
+      const errMsg = error instanceof Error ? error.message : String(error)
+      this.alert_subj.next('Failed to generate share URLs: ' + errMsg)
+    }
+  }
+
+  convert_notebook_lite_url() {
+    this.notebook_lite_conversion_message = ''
+    try {
+      const convertedUrl = this.notebookLiteConverter.convert(
+        this.notebook_lite_source_url, this.config, window.location.origin
+      )
+      this.notebook_lite_converted_url = convertedUrl
+    } catch (error) {
+      const err_msg = error instanceof Error ? error.message : String(error)
+      this.notebook_lite_conversion_message = 'Failed to convert URL: ' + err_msg
+    }
   }
 }

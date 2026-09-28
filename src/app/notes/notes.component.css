@@ -6,8 +6,6 @@
 }
 
 .notebook-page {
-  width: min(1120px, calc(100% - 48px));
-  margin: 0 auto;
   padding: 22px 0 70px;
 }
 
@@ -97,7 +95,7 @@
 
 @media (max-width: 680px) {
   :host { min-height: calc(100vh - 55px); }
-  .notebook-page { width: min(100% - 32px, 560px); padding-top: 18px; }
+  .notebook-page { padding-top: 18px; }
   .notebook-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .note-menu { max-height: 150px; margin-top: 8px; }
   .note-menu .nav-link { padding: 8px 11px; }

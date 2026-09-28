@@ -11,14 +11,14 @@ import { SettingsComponent } from './settings/settings.component';
 import { NgbModule, NgbNavModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxBootstrapIconsModule} from 'ngx-bootstrap-icons';
 import {
-  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill, clockFill,
+  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill, clockFill, github,
   cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill
 } from 'ngx-bootstrap-icons';
 import { FulllistComponent } from './fulllist/fulllist.component';
 import { NoteCardComponent } from './note-card/note-card.component';
 
 const icons = {
-  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill, clockFill,
+  questionCircle, tree, keyFill, arrowClockwise, book, fileEarmark, fileEarmarkArrowUpFill, clockFill, github,
   cloud, cloudFill, exclamationCircleFill, pencilFill, trashFill, caretUpFill, caretDownFill, fileEarmarkPlusFill
 };
 

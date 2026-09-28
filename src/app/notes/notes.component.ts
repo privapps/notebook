@@ -13,7 +13,7 @@ import { Prism } from '../prism';
     selector: 'app-notes',
     templateUrl: './notes.component.html',
     providers: [Location, { provide: LocationStrategy, useClass: HashLocationStrategy }],
-    styleUrls: ['./notes.component.css'],
+    styleUrls: ['../page-container.css', './notes.component.css'],
     standalone: false
 })
 export class NotesComponent implements OnInit, AfterViewInit {

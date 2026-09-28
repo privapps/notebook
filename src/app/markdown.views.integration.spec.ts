@@ -6,6 +6,8 @@ import { FulllistComponent } from './fulllist/fulllist.component';
 import { NotesComponent } from './notes/notes.component';
 import { BackboneService } from './backbone.service';
 import { Note } from './data_inteface';
+import { SettingsComponent } from './settings/settings.component';
+import { vi } from 'vitest';
 
 describe('Markdown note views', () => {
   let notes: Note[];
@@ -19,6 +21,8 @@ describe('Markdown note views', () => {
     wait_till_ready: () => Promise<void>;
     get_notes_url: () => string;
     get_extra_url: () => string;
+    getSelectedSettingIndex: () => number;
+    setSelectedSettingIndex: (index: number) => void;
     initial_blank: () => void;
     update_top_menu: () => void;
     is_content_changed: () => boolean;
@@ -41,6 +45,8 @@ describe('Markdown note views', () => {
       wait_till_ready: async () => undefined,
       get_notes_url: () => window.location.href,
       get_extra_url: () => service.parameters.type === 'ed' ? 'type,ed&id,review' : '',
+      getSelectedSettingIndex: () => 0,
+      setSelectedSettingIndex: () => undefined,
       initial_blank: () => undefined,
       update_top_menu: () => undefined,
       is_content_changed: () => false,
@@ -59,6 +65,7 @@ describe('Markdown note views', () => {
 
   afterEach(() => {
     window.confirm = originalConfirm;
+    vi.restoreAllMocks();
   });
 
   async function createNotesFixture(): Promise<ComponentFixture<NotesComponent>> {
@@ -87,6 +94,21 @@ describe('Markdown note views', () => {
     expect(markdown.querySelector('code div')).toBeNull();
     expect(notes[0].content).toBe('    <div>literal code</div>\n    print("hello")');
 
+  });
+
+  it('uses the same page width container for notes and settings', async () => {
+    const notesFixture = await createNotesFixture();
+    vi.spyOn(SettingsComponent.prototype, 'ngOnInit').mockResolvedValue(undefined);
+    const settingsFixture = TestBed.createComponent(SettingsComponent);
+    settingsFixture.detectChanges();
+
+    const notebookPage = notesFixture.nativeElement.querySelector('.notebook-page') as HTMLElement;
+    const settingsPage = settingsFixture.nativeElement.querySelector('.settings-page') as HTMLElement;
+    expect(notebookPage.classList.contains('page-container')).toBe(true);
+    expect(settingsPage.classList.contains('page-container')).toBe(true);
+    expect(window.getComputedStyle(notebookPage).width).toBe(window.getComputedStyle(settingsPage).width);
+    notesFixture.destroy();
+    settingsFixture.destroy();
   });
 
   it.each([

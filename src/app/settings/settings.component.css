@@ -1,28 +1,26 @@
 :host {
   display: block;
   min-height: calc(100vh - 62px);
-  background: #f7f8f6;
+  background: #edf2ee;
   color: #26312d;
 }
 
 .settings-page {
-  width: min(880px, calc(100% - 48px));
-  margin: 0 auto;
-  padding: 22px 0 70px;
+  padding: 18px 0 48px;
 }
 
 .custom-accordion {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .custom-item {
   min-width: 0;
   overflow: hidden;
-  border: 1px solid #cad8ce;
+  border: 1px solid #d8e2da;
   border-radius: 10px;
-  background: #fff;
-  box-shadow: 0 6px 22px rgb(39 60 45 / 4%);
+  background: #f8faf8;
+  box-shadow: 0 5px 16px rgb(39 60 45 / 6%);
 }
 
 .custom-item > input[type="checkbox"] {
@@ -39,9 +37,9 @@
   justify-content: space-between;
   gap: 16px;
   margin: 0;
-  padding: 16px 22px;
+  padding: 14px 18px;
   color: #405449;
-  background: #f1f5f1;
+  background: #e8efe9;
   cursor: pointer;
   font-size: 15px;
   font-weight: 600;
@@ -79,11 +77,11 @@
 .custom-item > input:focus-visible + label { outline: 3px solid #a5c7b6; outline-offset: -3px; }
 .custom-item > input:checked + label::after { transform: rotate(225deg); }
 
-.custom-content { display: none; padding: 20px 22px 22px; }
+.custom-content { display: none; padding: 18px 20px 20px; background: #f8faf8; }
 .custom-item > input:checked ~ .custom-content { display: block; }
 
 .section-description {
-  margin: 0 0 18px;
+  margin: 0 0 14px;
   color: #53645a;
   font-size: 14px;
   line-height: 1.65;
@@ -91,8 +89,7 @@
 
 @media (max-width: 680px) {
   :host { min-height: calc(100vh - 55px); }
-  .settings-page { width: min(100% - 32px, 560px); padding-top: 18px; }
-  .custom-accordion { gap: 10px; }
+  .settings-page { padding-top: 12px; }
   .custom-item > label { padding: 14px 16px; }
   .custom-content { padding: 18px 16px; }
 }
